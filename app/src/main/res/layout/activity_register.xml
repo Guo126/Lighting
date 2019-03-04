@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".LoginActivity"
+                android:background="@drawable/login">
+
+
+    <EditText
+            android:id="@+id/phone_input"
+            android:gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/phonetext"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shape_input"
+            android:textSize="20sp"
+    />
+
+    <EditText
+            android:layout_marginTop="37dp"
+            android:id="@+id/password_input"
+            android:gravity="center"
+
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textSize="20sp" android:layout_below="@+id/phone_input"
+            android:layout_alignStart="@+id/phone_input"/>
+
+    <Button
+            android:id="@+id/btn_login"
+            android:layout_marginTop="60dp"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="注            册"
+            android:textColor="#FFFFFF"
+            android:layout_below="@id/password_input"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/shape"/>
+
+
+</RelativeLayout>
+

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+          android:orientation="vertical"
+          >
+    <LinearLayout
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#df1bc4fc">
+        <TextView
+                android:layout_marginTop="10dp"
+                android:text="选择城市"
+                android:textColor="#ffffff"
+                android:textSize="26dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView" android:fontFamily="casual"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:background="#dfa6f4f4">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:background="#dfa6f4f4">
+
+
+        <EditText
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="18dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="搜索城市"
+                android:ems="10"
+                android:id="@+id/searchText"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:background="#dfa6f4f4">
+        <Button
+                android:layout_marginTop="13dp"
+                android:background="@drawable/shape_green"
+                android:layout_marginLeft="12dp"
+                android:text="搜索"
+                android:id="@+id/btn_search"
+                android:textColor="#ffffff"
+                android:layout_width="70dp"
+                android:layout_height="36dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:orientation="vertical"
+                  android:layout_height="500dp">
+        <ListView
+                 android:id="@+id/list"
+                 android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                 android:background="#aeffffff"
+                  />
+    </LinearLayout>
+</LinearLayout>
