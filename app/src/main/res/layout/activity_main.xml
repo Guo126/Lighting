@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               tools:context=".MainActivity"
-              android:background="@drawable/login"
+              android:background="@drawable/sky2"
               android:orientation="vertical">
 
     <LinearLayout
@@ -63,8 +63,6 @@
                     android:text="登 录"
                     android:textColor="#FFFFFF"
                     android:textSize="22sp"
-
-
             />
 
         </LinearLayout>
@@ -75,11 +73,9 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
-
             <Button
                     android:id="@+id/register"
                     android:layout_marginTop="170dp"
-
                     android:textSize="22sp"
                     android:layout_gravity="center_horizontal"
                     android:layout_height="wrap_content"

@@ -3,7 +3,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
             android:background="@drawable/sky"
-             tools:context="com.dianmo.flash.Fragment.FragmentB">
+             tools:context="com.dianmo.flash.Fragment.FragmentC">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout android:layout_width="match_parent"
@@ -20,7 +20,7 @@
                   android:layout_height="wrap_content"
                   android:textColor="#ffffff"
                   android:textSize="26dp"
-                  android:text="个人中心"/>
+                  android:text="朋友圈"/>
     </LinearLayout>
 
         <LinearLayout android:layout_width="match_parent"
