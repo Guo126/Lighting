@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import com.dianmo.flash.Adapter.FriItemAdapter;
 import com.dianmo.flash.Adapter.ItemAdapter;
 import com.dianmo.flash.Entity.Item;
 import com.dianmo.flash.MainActivity;
@@ -40,7 +41,7 @@ public class FragmentD extends Fragment {
     private Button take_photo;
     private Button cancel;
     private ListView list;
-    Item [] items = new Item[4];
+    Item[] items = new Item[4];
     public FragmentD() {
         // Required empty public constructor
         items[0] = new Item(R.drawable.user,"用户资料");
