@@ -1,15 +1,21 @@
 package com.dianmo.flash.Fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import com.dianmo.flash.Entity.Item;
+import com.dianmo.flash.Adapter.FriItemAdapter;
+import com.dianmo.flash.ChatActivity;
+import com.dianmo.flash.Entity.FriItem;
 import com.dianmo.flash.R;
+
+import java.util.ArrayList;
 
 
 /**
@@ -19,13 +25,15 @@ public class FragmentA extends Fragment {
     public static final int take =1;
 
     private ListView list;
-    Item [] items = new Item[4];
+    private ArrayList<FriItem> items;
+
     public FragmentA() {
         // Required empty public constructor
-        items[0] = new Item(R.drawable.user,"用户资料");
-        items[1] = new Item(R.drawable.book,"订单信息");
-        items[2] = new Item(R.drawable.sync,"版本更新");
-        items[3] = new Item(R.drawable.warningcircle,"关于");
+        items = new ArrayList<FriItem>();
+        items.add(new FriItem(R.drawable.girl,2,"叶轻灵","在吗?","11:12"));
+        items.add(new FriItem(R.drawable.man1,2,"小海","晚上一起去吃饭吧","10:45"));
+        items.add(new FriItem(R.drawable.man2,2,"王晴","晚上一起","昨天"));
+        items.add(new FriItem(R.drawable.man3,2,"吴瑶","去吃饭吧","3月1日"));
 
     }
 
@@ -39,7 +47,17 @@ public class FragmentA extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        list = (ListView)getActivity().findViewById(R.id.list);
+        list.setAdapter(new FriItemAdapter(getContext(),items));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FriItem item =items.get(position);
+                Intent intent =new Intent(getActivity(),ChatActivity.class);
+                intent.putExtra("name",item.getFriName());
+                startActivity(intent);
+            }
+        });
     }
 
 

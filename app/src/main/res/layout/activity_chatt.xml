@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:id="@+id/main"
+                                             android:orientation="vertical"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  app:layout_constraintVertical_weight="1"
+                  android:id="@+id/content"
+                  android:orientation="vertical"
+                  app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+    >
+
+        <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_marginTop="24dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:background="#e6e4e4"
+        >
+            <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#252424"
+                    android:textSize="25sp"
+            />
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_weight="1"
+                      android:layout_height="0dp">
+            <ListView android:id="@+id/list"
+                      android:layout_width="match_parent"
+                      android:divider="@null"
+                      android:dividerHeight="10dp"
+                      android:background="#FFFFFF"
+                      android:layout_height="match_parent"
+
+            />
+        </LinearLayout>
+
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="50dp"
+                      android:gravity="center"
+                      android:orientation="horizontal"
+                      android:background="#e6e4e4"
+        >
+            <ImageView android:id="@+id/oprate"
+                       android:layout_width="0dp"
+                       android:layout_marginStart="6dp"
+                       android:layout_marginTop="6dp"
+                       android:layout_marginBottom="6dp"
+                       android:layout_weight="1"
+                       android:src="@drawable/words"
+                       android:layout_height="wrap_content"/>
+            <FrameLayout android:layout_width="0dp"
+                         android:layout_weight="5"
+                         android:layout_height="match_parent">
+                <com.dianmo.view.AudioButton
+                        android:id="@+id/recorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:text="@string/recorder_normal"
+                        android:textColor="#636161"
+                        android:background="@drawable/btn_normal"
+                        android:layout_marginBottom="9dp">
+                </com.dianmo.view.AudioButton>
+            </FrameLayout>
+
+            <ImageView android:id="@+id/more"
+                       android:layout_width="0dp"
+                       android:layout_marginEnd="6dp"
+                       android:layout_marginTop="6dp"
+                       android:layout_marginBottom="6dp"
+                       android:layout_weight="1"
+                       android:src="@drawable/more"
+                       android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>
