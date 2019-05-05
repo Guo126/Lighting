@@ -1,9 +1,6 @@
 package com.dianmo.flash;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,14 +11,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.*;
+import com.dianmo.flash.Entity.user.UserMsg;
+import com.dianmo.flash.uitl.INetCallback;
+import com.dianmo.flash.uitl.NetworkUtil;
 
-import static java.lang.System.out;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
 
 public class RegisterActivity extends Activity {
 
-    private EditText phone, password;
+    private EditText phone, name,password;
     private Button reg;
     //声明一个SharedPreferences对象和一个Editor对象
     private SharedPreferences preferences;
@@ -31,6 +32,7 @@ public class RegisterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         phone = (EditText) findViewById(R.id.phone_input);
+        name = (EditText) findViewById(R.id.name_input);
         password = (EditText) findViewById(R.id.password_input);
         reg = (Button) findViewById(R.id.btn_login);
         //获取preferences和editor对象
@@ -40,37 +42,64 @@ public class RegisterActivity extends Activity {
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = phone.getText().toString().trim();
-                String passwords = password.getText().toString().trim();
-                if(name!=null){
-                    if(name.length()!=11){
-                        Toast.makeText(getApplicationContext(),"手机号格式错误",Toast.LENGTH_SHORT).show();
-                    }else {
+                final String phoneNum = phone.getText().toString().trim();
+                final String passwords = password.getText().toString().trim();
+                final String userName = name.getText().toString().trim();
+                if (phoneNum != null) {
+                    if (phoneNum.length() != 11) {
+                        Toast.makeText(getApplicationContext(), "手机号格式错误", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if(userName!=null){
 
-                        if (passwords != null) {
-                            editor.putString("userPhone", name);
-                            editor.putString("userPassword", passwords);
-                            editor.apply();
-                            try {
-                                saveFile(name + "@" + passwords);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            if (passwords != null) {
+                                editor.putString("userPhone", phoneNum);
+                                editor.putString("userPassword", passwords);
+                                editor.putString("myName",userName);
+                                editor.apply();
+                                NetworkUtil.postMethod("http://39.106.81.100:9999/light/user/register", new HashMap<String, String>() {{
+                                            put("phone", phoneNum);
+                                            put("psw", passwords);
+                                            put("name", userName);
+                                        }}, UserMsg.class, new INetCallback<UserMsg>() {
+                                            @Override
+                                            public void onSuccess(final UserMsg msg) {
+
+                                                if(!msg.isSuccess()){
+
+                                                    runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            Toast.makeText(getApplicationContext(),
+                                                                    msg.getAlter(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                                }else{
+                                                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                                    startActivity(intent);
+                                                    RegisterActivity.this.finish();
+                                                }
+                                            }
+                                        }
+                                );
+
+
+
+                            } else {
+                                //密码健壮性
+                                Toast.makeText(getApplicationContext(), "密码不能为空", Toast.LENGTH_SHORT).show();
                             }
-                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            RegisterActivity.this.finish();
-
-                        } else {
-                            //密码健壮性
-                            Toast.makeText(getApplicationContext(), "密码不能为空", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getApplicationContext(), "用户名不能为空", Toast.LENGTH_SHORT).show();
                         }
                     }
-                }else{
+                } else {
                     //手机号健壮性
-                    Toast.makeText(getApplicationContext(),"手机号不能为空",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "手机号不能为空", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+
     }
 
     private void saveFile(String str) throws Exception {

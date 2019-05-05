@@ -2,22 +2,36 @@ package com.dianmo.flash;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.*;
+import com.dianmo.flash.Entity.user.UserInner;
+import com.dianmo.flash.Entity.user.UserMsg;
+
+import com.dianmo.flash.uitl.INetCallback;
+import com.dianmo.flash.uitl.NetworkUtil;
+
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText phone, password;
     private Button login;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
+    private UserInner userInner =new UserInner();
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -44,7 +58,29 @@ public class LoginActivity extends AppCompatActivity {
                 if(getFile(phone.getText().toString(),password.getText().toString())){
                     editor.putInt("isLogin",1);
                     editor.apply();
-                    Intent intent = new Intent(LoginActivity.this,MustActivity.class);
+
+                    NetworkUtil.postMethod("http://39.106.81.100:9999/light/user/login", new HashMap<String, String>() {{
+                                put("phone", name);
+                                put("psw", passwords);
+                            }}, UserMsg.class, new INetCallback<UserMsg>() {
+                                @Override
+                                public void onSuccess(final UserMsg msg) {
+                                    if(!msg.isSuccess()){
+                                        userInner = msg.getUserInner();
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getApplicationContext(),
+                                                        msg.getAlter(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                    );
+
+                    Intent intent = new Intent(LoginActivity.this, MustActivity.class);
+                    intent.putExtra("userInner",new Gson().toJson(userInner));
                     startActivity(intent);
                     LoginActivity.this.finish();
                 }else{

@@ -47,7 +47,7 @@ public class FriItemAdapter extends BaseAdapter {
                         holder.image = (ImageView) convertView.findViewById(R.id.friImg);
                         //holder.num = (ImageView) convertView.findViewById(R.id.image1);
                         holder.name = (TextView) convertView.findViewById(R.id.name);
-                        holder.mes = (TextView) convertView.findViewById(R.id.mes);
+                        holder.mes = (TextView) convertView.findViewById(R.id.speak);
                         holder.time = (TextView) convertView.findViewById(R.id.time);
                        convertView.setTag(holder);
                      } else {   //else里面说明，convertView已经被复用了，说明convertView中已经设置过tag了，即holder
