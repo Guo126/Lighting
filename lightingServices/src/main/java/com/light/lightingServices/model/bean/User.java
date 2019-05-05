@@ -1,20 +1,17 @@
-package com.light.lightingServices.bean;
+package com.light.lightingServices.model.bean;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 @Entity
 @Table(name = "user")
 public class User {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private
-    Integer id;
 
+    @Id
     @Column(name = "phone")
     private
-    String phone;
+    BigInteger phone;
 
     @Column(name = "psw")
     private
@@ -31,27 +28,18 @@ public class User {
     public User() {
     }
 
-    public User(Integer id, String phone, String psw, String name, String icon) {
-        this.id = id;
+    public User(BigInteger phone, String psw, String name, String icon) {
         this.phone = phone;
         this.psw = psw;
         this.name = name;
         this.icon = icon;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getPhone() {
+    public BigInteger getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public void setPhone(BigInteger phone) {
         this.phone = phone;
     }
 
