@@ -30,6 +30,8 @@
                 android:layout_centerVertical="true"
                 android:background="@drawable/shape_input"
                 android:textSize="20sp"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
         />
 
         <EditText
@@ -44,7 +46,9 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:layout_below="@id/phone_input"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:imeOptions="actionDone"
+                android:singleLine="true"/>
         <Button
                 android:layout_marginTop="100dp"
                 android:id="@+id/btn_login"
