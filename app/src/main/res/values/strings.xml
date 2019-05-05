@@ -2,6 +2,9 @@
     <string name="app_name">萤火</string>
     <string name="phonetext">请输入手机号</string>
     <string name="password">请输入密码</string>
+    <string name="recorder_normal">按住说话</string>
+    <string name="recorder_recording">松开结束</string>
+    <string name="recorder_finish">松开手指，取消发送</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
