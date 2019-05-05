@@ -14,8 +14,10 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     User login(BigInteger phone, String psw);
 
     @Query(value = "select * from user where phone=?1",nativeQuery = true)
-    List<User> getUser(BigInteger id);
+    User getUser(BigInteger id);
 
     @Query(value = "select 1 from user where phone=?1",nativeQuery = true)
     Integer exist(BigInteger phone);
+
+
 }

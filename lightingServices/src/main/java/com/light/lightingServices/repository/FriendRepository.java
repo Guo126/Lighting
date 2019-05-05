@@ -12,4 +12,7 @@ public interface FriendRepository extends JpaRepository<Friends,FriendsID> {
 
     @Query(value = "select * from friends where user_a_id=?1",nativeQuery = true)
     List<Friends> getFriends(BigInteger id);
+
+    @Query(value = "select 1 from friends where user_a_id=?1 and user_b_id=?2",nativeQuery = true)
+    Integer hasFriend(BigInteger uid,BigInteger fid);
 }
