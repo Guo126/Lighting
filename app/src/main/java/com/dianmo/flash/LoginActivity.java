@@ -58,8 +58,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
                     NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/login", new HashMap<String, String>() {{
-                                put("phone", name);
-                                put("psw", passwords);
+                                put("phone", phone.getText().toString());
+                                put("psw", password.getText().toString());
                             }}, UserMsg.class, new INetCallback<UserMsg>() {
                                 @Override
                                 public void onSuccess(final UserMsg msg) {
@@ -72,23 +72,15 @@ public class LoginActivity extends AppCompatActivity {
                                             }
                                         });
                                     }else{
-                                        editor.putInt("isLogin",1);
-                                        editor.apply();
                                         userInner = msg.getUserInner();
                                         Intent intent = new Intent(LoginActivity.this, MustActivity.class);
-                                        intent.putExtra("userInner",new Gson().toJson(userInner));
+                                        intent.putExtra("userInner",userInner);
                                         startActivity(intent);
                                         LoginActivity.this.finish();
                                     }
                                 }
                             }
                     );
-
-
-
-
-
-
 
             }
         });

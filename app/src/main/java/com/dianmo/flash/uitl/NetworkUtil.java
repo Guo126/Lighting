@@ -1,17 +1,25 @@
 package com.dianmo.flash.uitl;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import com.dianmo.flash.Entity.user.BasMsg;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
@@ -54,6 +62,7 @@ public class NetworkUtil {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+
                 Log.d("Network","failure");
             }
 
@@ -65,5 +74,38 @@ public class NetworkUtil {
             }
         });
     }
+
+    public static <T> void upLoadImg(String url, String uid ,String imgPath, final Class<T> cls, final INetCallback<T> callback){
+         final String imageType = "multipart/form-data";
+         File file = new File(imgPath);
+        RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), file);
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("img",file.getName(),fileBody)
+                .addFormDataPart("uid", uid)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+        client.newBuilder().readTimeout(10000, TimeUnit.MILLISECONDS).build().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+               Log.d("Timeout","超时超时");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(response.isSuccessful()){
+                    callback.onSuccess(gson.fromJson(response.body().string(),cls));
+                }
+            }
+        });
+
+
+    }
+
+
 
 }
