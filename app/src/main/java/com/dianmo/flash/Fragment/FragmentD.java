@@ -2,6 +2,7 @@ package com.dianmo.flash.Fragment;
 
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -36,6 +37,7 @@ import static android.app.Activity.RESULT_OK;
  */
 public class FragmentD extends Fragment {
     public static final int take =1;
+    private static final int GETIMG = 2;
     private ImageView photo;
     private Uri imageUri;
     private Button take_photo;
@@ -61,30 +63,15 @@ public class FragmentD extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        take_photo = (Button) getActivity().findViewById(R.id.take_photo);
         photo = (ImageView) getActivity().findViewById(R.id.photo) ;
-        take_photo.setOnClickListener(new View.OnClickListener() {
+        photo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                File outputImage = new File(getActivity().getExternalCacheDir(),"output_image.jpg");
-                try{
-                    if(outputImage.exists()){
-                        outputImage.delete();
-                    }
-                    outputImage.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(Build.VERSION.SDK_INT >=24){
-                    imageUri = FileProvider.getUriForFile(getActivity(),"com.dianmo.flash.fileprovider",outputImage);
-                }else{
-                    imageUri = Uri.fromFile(outputImage);
-                }
-                Intent intent =new Intent("android.media.action.IMAGE_CAPTURE");
-                intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
-                startActivityForResult(intent,take);
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i,GETIMG);
             }
         });
+       
         list = (ListView) getActivity().findViewById(R.id.list);
         cancel = (Button) getActivity().findViewById(R.id.cancel) ;
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +96,23 @@ public class FragmentD extends Fragment {
                         e.printStackTrace();
                     }
                 }
+                break;
+            case GETIMG:
+                //打开相册并选择照片，这个方式选择单张
+// 获取返回的数据，这里是android自定义的Uri地址
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+// 获取选择照片的数据视图
+                Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                        filePathColumn, null, null, null);
+                cursor.moveToFirst();
+// 从数据视图中获取已选择图片的路径
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String picturePath = cursor.getString(columnIndex);
+                cursor.close();
+// 将图片显示到界面上
+
+                photo.setImageBitmap(BitmapFactory.decodeFile(picturePath));
                 break;
                 default:break;
         }

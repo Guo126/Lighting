@@ -55,18 +55,15 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getFile(phone.getText().toString(),password.getText().toString())){
-                    editor.putInt("isLogin",1);
-                    editor.apply();
 
-                    NetworkUtil.postMethod("http://39.106.81.100:9999/light/user/login", new HashMap<String, String>() {{
+
+                    NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/login", new HashMap<String, String>() {{
                                 put("phone", name);
                                 put("psw", passwords);
                             }}, UserMsg.class, new INetCallback<UserMsg>() {
                                 @Override
                                 public void onSuccess(final UserMsg msg) {
                                     if(!msg.isSuccess()){
-                                        userInner = msg.getUserInner();
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
@@ -74,18 +71,23 @@ public class LoginActivity extends AppCompatActivity {
                                                         msg.getAlter(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
+                                    }else{
+                                        editor.putInt("isLogin",1);
+                                        editor.apply();
+                                        userInner = msg.getUserInner();
+                                        Intent intent = new Intent(LoginActivity.this, MustActivity.class);
+                                        intent.putExtra("userInner",new Gson().toJson(userInner));
+                                        startActivity(intent);
+                                        LoginActivity.this.finish();
                                     }
                                 }
                             }
                     );
 
-                    Intent intent = new Intent(LoginActivity.this, MustActivity.class);
-                    intent.putExtra("userInner",new Gson().toJson(userInner));
-                    startActivity(intent);
-                    LoginActivity.this.finish();
-                }else{
-                    Toast.makeText(getApplicationContext(),"手机号或密码错误",Toast.LENGTH_SHORT).show();
-                }
+
+
+
+
 
 
             }

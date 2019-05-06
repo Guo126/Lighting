@@ -56,7 +56,7 @@ public class RegisterActivity extends Activity {
                                 editor.putString("userPassword", passwords);
                                 editor.putString("myName",userName);
                                 editor.apply();
-                                NetworkUtil.postMethod("http://39.106.81.100:9999/light/user/register", new HashMap<String, String>() {{
+                                NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/register", new HashMap<String, String>() {{
                                             put("phone", phoneNum);
                                             put("psw", passwords);
                                             put("name", userName);
