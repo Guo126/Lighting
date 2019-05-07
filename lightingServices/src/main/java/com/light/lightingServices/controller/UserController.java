@@ -58,7 +58,7 @@ public class UserController {
 
 
     @PostMapping("/upload")
-    BaseMsg<Null> uploadIcon(@RequestParam("uid") BigInteger uid,
+    BaseMsg<String> uploadIcon(@RequestParam("uid") BigInteger uid,
                              @RequestParam("img")MultipartFile img)
     {
 

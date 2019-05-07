@@ -13,5 +13,5 @@ public interface UserServices {
     BaseMsg<UserMsg> register(BigInteger phone, String psw, String name);
     BaseMsg<FriendMsg> getFriend(BigInteger id);
     BaseMsg<FriendMsg> makeFriend(BigInteger uid,BigInteger fid);
-    BaseMsg<Null> uploadIcon(BigInteger id, MultipartFile file);
+    BaseMsg<String> uploadIcon(BigInteger id, MultipartFile file);
 }

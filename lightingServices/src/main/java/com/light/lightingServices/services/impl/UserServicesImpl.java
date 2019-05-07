@@ -146,11 +146,11 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public BaseMsg<Null> uploadIcon(BigInteger id, MultipartFile file) {
+    public BaseMsg<String> uploadIcon(BigInteger id, MultipartFile file) {
         String targetPath = recoursePath + id + "\\";
         String url = urlPath + id + "/";
 
-        BaseMsg<Null> baseMsg = new BaseMsg<>();
+        BaseMsg<String> baseMsg = new BaseMsg<>();
 
         try {
             url += FileUtil.save(file,targetPath);
@@ -161,7 +161,7 @@ public class UserServicesImpl implements UserServices {
             userRepository.save(user);
 
             baseMsg.setSuccess(true);
-
+            baseMsg.setMsg(url);
 
         } catch (IOException e) {
             e.printStackTrace();
