@@ -59,6 +59,8 @@ public class FragmentD extends Fragment {
     private Button cancel;
     private ListView list;
     private UserInner userInner = new UserInner();
+    private BasMsg basMsg = new BasMsg();
+    private boolean isUp = false;
     String picturePath= null;
     Item[] items = new Item[4];
     public FragmentD() {
@@ -114,12 +116,7 @@ public class FragmentD extends Fragment {
         switch (requestCode){
             case TAKEPHOTO:
                 if(resultCode ==RESULT_OK){
-                    try{
-                        Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(imageUri));
-                        draweeView.setImageBitmap(bitmap);
-                    }catch (FileNotFoundException e){
-                        e.printStackTrace();
-                    }
+                    draweeView.setImageURI(imageUri);
                 }
                 break;
             case GETIMG:
@@ -140,10 +137,14 @@ public class FragmentD extends Fragment {
                     NetworkUtil.upLoadImg("http://39.106.81.100:9999/firefly/user/upload",userInner.getId().toString(),picturePath, BasMsg.class, new INetCallback<BasMsg>() {
                         @Override
                         public void onSuccess(final BasMsg msg) {
-                            draweeView.setImageURI(picturePath);
+                            basMsg = msg;
+                            isUp = true;
                         }
                     });
-                    
+                    if(isUp&&basMsg.getMsg()!=null){
+                        draweeView.setImageURI(basMsg.getMsg());
+                        isUp =false;
+                    }
                 }
                 break;
 

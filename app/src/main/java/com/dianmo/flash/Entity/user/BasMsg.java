@@ -2,17 +2,20 @@ package com.dianmo.flash.Entity.user;
 
 public class BasMsg {
     String alter;
+    String msg;
     boolean success;
 
 
     public BasMsg() {
     }
 
-    public BasMsg(String alter, boolean success, UserInner userInner) {
+    public BasMsg(String alter, String msg,boolean success) {
         this.alter = alter;
+        this.msg = msg;
         this.success = success;
 
     }
+
 
     public String getAlter() {
         return alter;
@@ -31,4 +34,11 @@ public class BasMsg {
     }
 
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 }

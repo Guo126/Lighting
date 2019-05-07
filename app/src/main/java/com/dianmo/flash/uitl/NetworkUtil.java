@@ -39,9 +39,9 @@ public class NetworkUtil {
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if(response.isSuccessful()){//回调的方法执行在子线程。
+                if(response.isSuccessful()){
+                    //回调的方法执行在子线程。
                     callback.onSuccess(gson.fromJson( response.body().string(),cls));
-
                 }
             }
         });
