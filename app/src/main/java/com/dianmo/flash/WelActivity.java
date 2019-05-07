@@ -12,6 +12,8 @@ import android.support.v4.app.ActivityCompat;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 
 public class WelActivity extends Activity {
     Graph list = new Graph();
@@ -19,6 +21,7 @@ public class WelActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         pre = getSharedPreferences("UserInfo",MODE_PRIVATE);
         final int isLogin = pre.getInt("isLogin",0);
@@ -55,14 +58,16 @@ public class WelActivity extends Activity {
             @Override
             public void run()
             {
+                Intent intent = new Intent(WelActivity.this,MainActivity.class);
+                startActivity(intent);
 //页面跳转
-                if(isLogin==1){
-                    Intent intent = new Intent(WelActivity.this,MustActivity.class);
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent(WelActivity.this,MainActivity.class);
-                    startActivity(intent);
-                }
+//                if(isLogin==1){
+//                    Intent intent = new Intent(WelActivity.this,MustActivity.class);
+//                    startActivity(intent);
+//                }else{
+//                    Intent intent = new Intent(WelActivity.this,MainActivity.class);
+//                    startActivity(intent);
+//                }
 
 //保存跳转信息
 

@@ -2,6 +2,7 @@ package com.dianmo.flash.Fragment;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,30 +20,46 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.dianmo.flash.Adapter.FriItemAdapter;
 import com.dianmo.flash.Adapter.ItemAdapter;
 import com.dianmo.flash.Entity.Item;
+import com.dianmo.flash.Entity.user.BasMsg;
+import com.dianmo.flash.Entity.user.UserInner;
+import com.dianmo.flash.Entity.user.UserMsg;
 import com.dianmo.flash.MainActivity;
 import com.dianmo.flash.R;
+import com.dianmo.flash.uitl.INetCallback;
+import com.dianmo.flash.uitl.NetworkUtil;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Arrays;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FragmentD extends Fragment {
-    public static final int take =1;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+    public static final int TAKEPHOTO =1;
     private static final int GETIMG = 2;
-    private ImageView photo;
+    private TextView uName;
     private Uri imageUri;
     private Button take_photo;
+    private SimpleDraweeView draweeView;
     private Button cancel;
     private ListView list;
+    private UserInner userInner = new UserInner();
+    String picturePath= null;
     Item[] items = new Item[4];
     public FragmentD() {
         // Required empty public constructor
@@ -57,21 +74,29 @@ public class FragmentD extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        photo = (ImageView) getActivity().findViewById(R.id.photo) ;
-        photo.setOnClickListener(new View.OnClickListener() {
+        uName = (TextView) getActivity().findViewById(R.id.uName);
+        userInner = (UserInner) getActivity().getIntent().getSerializableExtra("userInner");
+        uName.setText(userInner.getName());
+        draweeView = (SimpleDraweeView) getActivity().findViewById(R.id.photo);
+        if(userInner.getPhoto()!=null){
+            Uri uri = Uri.parse(userInner.getPhoto());
+            draweeView.setImageURI(uri);
+        }
+        draweeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i,GETIMG);
             }
         });
-       
+
         list = (ListView) getActivity().findViewById(R.id.list);
         cancel = (Button) getActivity().findViewById(R.id.cancel) ;
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -87,11 +112,11 @@ public class FragmentD extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case take:
+            case TAKEPHOTO:
                 if(resultCode ==RESULT_OK){
                     try{
                         Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(imageUri));
-                        photo.setImageBitmap(bitmap);
+                        draweeView.setImageBitmap(bitmap);
                     }catch (FileNotFoundException e){
                         e.printStackTrace();
                     }
@@ -103,17 +128,25 @@ public class FragmentD extends Fragment {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
 // 获取选择照片的数据视图
-                Cursor cursor = getActivity().getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
+                if(selectedImage!=null){
+                    Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                    cursor.moveToFirst();
 // 从数据视图中获取已选择图片的路径
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String picturePath = cursor.getString(columnIndex);
-                cursor.close();
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    picturePath = cursor.getString(columnIndex);
+                    cursor.close();
 // 将图片显示到界面上
 
-                photo.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                    NetworkUtil.upLoadImg("http://39.106.81.100:9999/firefly/user/upload",userInner.getId().toString(),picturePath, BasMsg.class, new INetCallback<BasMsg>() {
+                        @Override
+                        public void onSuccess(final BasMsg msg) {
+                            draweeView.setImageURI(picturePath);
+                        }
+                    });
+                    
+                }
                 break;
+
                 default:break;
         }
     }

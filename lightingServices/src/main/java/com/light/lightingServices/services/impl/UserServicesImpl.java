@@ -10,6 +10,7 @@ import com.light.lightingServices.model.bean.User;
 import com.light.lightingServices.repository.FriendRepository;
 import com.light.lightingServices.repository.UserRepository;
 import com.light.lightingServices.services.UserServices;
+import com.light.lightingServices.uitl.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -128,6 +129,9 @@ public class UserServicesImpl implements UserServices {
         Friends friends = new Friends(uid,fid);
         friendRepository.save(friends);
 
+        Friends friends1 = new Friends(fid,uid);
+        friendRepository.save(friends1);
+
         BaseMsg<FriendMsg> baseMsg = new BaseMsg<>();
         baseMsg.setSuccess(true);
 
@@ -149,20 +153,7 @@ public class UserServicesImpl implements UserServices {
         BaseMsg<Null> baseMsg = new BaseMsg<>();
 
         try {
-            byte[] imgByte = file.getBytes();
-            DateFormat dataFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-            String fileName = dataFormat.format(System.currentTimeMillis())+file.getOriginalFilename();
-            File targetFile = new File(targetPath);
-            if(!targetFile.exists())
-            {
-                targetFile.mkdirs();
-            }
-
-            Path path = Paths.get(targetPath,fileName);
-            Files.write(path,imgByte);
-
-            url += fileName;
-
+            url += FileUtil.save(file,targetPath);
 
             User user= userRepository.getUser(id);
             user.setIcon(url);

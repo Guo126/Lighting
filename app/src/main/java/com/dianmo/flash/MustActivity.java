@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.dianmo.flash.Entity.user.UserInner;
 import com.dianmo.flash.Fragment.FragmentA;
 import com.dianmo.flash.Fragment.FragmentB;
 import com.dianmo.flash.Fragment.FragmentC;
@@ -19,6 +21,8 @@ public class MustActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView item1,item2,item3,item4;
     private FragmentManager fragmentManager;
     private ImageView[] ivs;
+
+    public UserInner inner;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +42,8 @@ public class MustActivity extends AppCompatActivity implements View.OnClickListe
         transaction.replace(R.id.content, new FragmentA());
         transaction.commit();//事务一定要提交，replace才会有效
         ivs[0].setImageResource(R.drawable.messagese);
+
+       // inner = (UserInner) getIntent().getSerializableExtra("userInner");
     }
 
     @Override
