@@ -22,9 +22,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dianmo.flash.Adapter.FriItemAdapter;
 import com.dianmo.flash.Adapter.ListAdapter;
+import com.dianmo.flash.Adapter.NewFriendAdapter;
 import com.dianmo.flash.ChatActivity;
 import com.dianmo.flash.Entity.Friend;
+import com.dianmo.flash.FriendMessage;
 import com.dianmo.flash.R;
 
 import java.util.ArrayList;
@@ -69,12 +72,15 @@ public class FragmentB extends Fragment {
         final EditText find=(EditText)getActivity().findViewById(R.id.friendFind);
         list = (ListView)getActivity().findViewById(R.id.list);
         newfirList=(ListView)getActivity().findViewById(R.id.newfirList);
-        newfirList.setAdapter(new ListAdapter(getContext(),newFriends));
+
+        newfirList.setAdapter(new NewFriendAdapter(getContext(),newFriends,this));
         list.setAdapter(new ListAdapter(getContext(),friends));
         newfirList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(),"转到添加好友界面",Toast.LENGTH_SHORT).show();
+                //oast.makeText(getActivity(),"转到添加好友界面",Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(getActivity(), FriendMessage.class);
+                startActivity(intent);
             }
         });
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,5 +147,25 @@ public class FragmentB extends Fragment {
 
     }
 
+    public void NewFirCallback(int i,boolean agree)
+    {
+        if(agree)
+        {
+            //数据添加
+            /*
+            *
+            *
+            *
+             */
+            newFriends.remove(i);
+            list.setAdapter(new ListAdapter(getContext(),friends));
+        }
+        else
+        {
+            newFriends.remove(i);
+        }
+
+        newfirList.setAdapter(new NewFriendAdapter(getContext(),newFriends,this));
+    }
 
 }
