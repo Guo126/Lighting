@@ -27,10 +27,16 @@ import com.dianmo.flash.Adapter.ListAdapter;
 import com.dianmo.flash.Adapter.NewFriendAdapter;
 import com.dianmo.flash.ChatActivity;
 import com.dianmo.flash.Entity.Friend;
+<<<<<<< HEAD
 import com.dianmo.flash.FriendMessage;
+=======
+import com.dianmo.flash.Entity.user.UserInner;
+>>>>>>> 30c82559549040b4fcf0b4f02ce6e9e690fc73ea
 import com.dianmo.flash.R;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -41,6 +47,7 @@ public class FragmentB extends Fragment {
 
     private ListView list;
     private ListView newfirList;
+    private List<BigInteger> friIds;
     private ArrayList<Friend> friends;
     private ArrayList<Friend> findFri;
     private ArrayList<Friend> newFriends;
@@ -52,9 +59,6 @@ public class FragmentB extends Fragment {
         newFriends=new ArrayList<Friend>();
 
         newFriends.add(new Friend(R.drawable.girl,"小ai","dd"));
-
-        friends.add(new Friend(R.drawable.girl,"叶轻灵","sdasdasddd"));
-        friends.add(new Friend(R.drawable.girl,"小琴","asddd"));
     }
 
     @Override
@@ -67,6 +71,7 @@ public class FragmentB extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        friIds = ((UserInner) getActivity().getIntent().getSerializableExtra("userInner")).getFriendIDList();
 
         ImageView add=(ImageView)getActivity().findViewById(R.id.imageView);
         final EditText find=(EditText)getActivity().findViewById(R.id.friendFind);

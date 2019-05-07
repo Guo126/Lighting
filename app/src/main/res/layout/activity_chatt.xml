@@ -59,7 +59,9 @@
                        android:layout_weight="1"
                        android:src="@drawable/words"
                        android:layout_height="wrap_content"/>
-            <FrameLayout android:layout_width="0dp"
+            <FrameLayout
+                         android:id="@+id/send_context"
+                         android:layout_width="0dp"
                          android:layout_weight="5"
                          android:layout_height="match_parent">
                 <com.dianmo.view.AudioButton

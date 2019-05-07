@@ -68,9 +68,9 @@ public class DialogManager {
 
     public void updateVoice(int level){
         if(mDialog!=null&&mDialog.isShowing()){
-            icon.setVisibility(View.VISIBLE);
-            voice.setVisibility(View.VISIBLE);
-            alert.setVisibility(View.VISIBLE);
+//            icon.setVisibility(View.VISIBLE);
+//            voice.setVisibility(View.VISIBLE);
+//            alert.setVisibility(View.VISIBLE);
             int resID = context.getResources().getIdentifier("v"+level,"drawable",context.getPackageName());
             voice.setImageResource(resID);
         }
