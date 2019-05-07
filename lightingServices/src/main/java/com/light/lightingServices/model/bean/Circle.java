@@ -2,13 +2,14 @@ package com.light.lightingServices.model.bean;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "circle")
 public class Circle {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "circle_id")
     private Integer circle;
 
@@ -20,6 +21,9 @@ public class Circle {
 
     @Column(name = "img")
     private String img;
+
+    @Column(name = "time")
+    private Timestamp time;
 
     public Circle() {
     }
@@ -35,6 +39,29 @@ public class Circle {
         this.userId = userId;
         this.content = content;
         this.img = img;
+    }
+
+    public Circle(BigInteger userId, String content, String img, Timestamp time) {
+        this.userId = userId;
+        this.content = content;
+        this.img = img;
+        this.time = time;
+    }
+
+    public Circle(Integer circle, BigInteger userId, String content, String img, Timestamp time) {
+        this.circle = circle;
+        this.userId = userId;
+        this.content = content;
+        this.img = img;
+        this.time = time;
+    }
+
+    public Timestamp getTime() {
+        return time;
+    }
+
+    public void setTime(Timestamp time) {
+        this.time = time;
     }
 
     public Integer getCircle() {

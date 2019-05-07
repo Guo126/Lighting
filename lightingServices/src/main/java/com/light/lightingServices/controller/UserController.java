@@ -61,6 +61,7 @@ public class UserController {
     BaseMsg<Null> uploadIcon(@RequestParam("uid") BigInteger uid,
                              @RequestParam("img")MultipartFile img)
     {
+
         return userServices.uploadIcon(uid,img);
     }
 

@@ -4,4 +4,4 @@ server:
     context-path: /firefly
 
 ResourcePath: C:\Users\Administrator\Desktop\weChat\treasure\
-getResourcePath: http:39.106.81.100:9999/firefly/img/
+getResourcePath: http://39.106.81.100:9999/firefly/treasure/
