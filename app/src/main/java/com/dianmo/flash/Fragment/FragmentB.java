@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.dianmo.flash.Adapter.ListAdapter;
 import com.dianmo.flash.ChatActivity;
+import com.dianmo.flash.EditActivity;
 import com.dianmo.flash.Entity.Friend;
 import com.dianmo.flash.Entity.user.UserInner;
 import com.dianmo.flash.R;
@@ -84,7 +85,7 @@ public class FragmentB extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Friend item =(Friend)parent.getAdapter().getItem(position);
-                Intent intent =new Intent(getActivity(), ChatActivity.class);
+                Intent intent =new Intent(getActivity(), EditActivity.class);
                 intent.putExtra("name",item.getFriendName());
                 startActivity(intent);
             }

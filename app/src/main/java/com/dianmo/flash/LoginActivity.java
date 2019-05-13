@@ -16,6 +16,7 @@ import com.dianmo.flash.Entity.user.UserMsg;
 import com.dianmo.flash.uitl.INetCallback;
 import com.dianmo.flash.uitl.NetworkUtil;
 
+import com.dianmo.flash.uitl.WsManager;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -25,6 +26,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText phone, password;
@@ -32,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private UserInner userInner =new UserInner();
+    public static WsManager wsManager ;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -55,8 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                     NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/login", new HashMap<String, String>() {{
                                 put("phone", phone.getText().toString());
                                 put("psw", password.getText().toString());
@@ -72,6 +75,16 @@ public class LoginActivity extends AppCompatActivity {
                                             }
                                         });
                                     }else{
+                                        //实例化wsManager
+                                        wsManager = new WsManager.Builder(getBaseContext()).client(
+                                                new OkHttpClient().newBuilder()
+                                                        .pingInterval(15, TimeUnit.SECONDS)
+                                                        .retryOnConnectionFailure(true)
+                                                        .build())
+                                                .needReconnect(true)
+                                                .wsUrl("ws://39.106.81.100:9999/firefly/chat/"+phone.getText())
+                                                .build();
+                                        wsManager.startConnect();
                                         userInner = msg.getUserInner();
                                         Intent intent = new Intent(LoginActivity.this, MustActivity.class);
                                         intent.putExtra("userInner",userInner);
