@@ -45,21 +45,22 @@ public class WsManager implements IWsManager {
         public void onOpen(WebSocket webSocket, final Response response) {
             mWebSocket = webSocket;
             setCurrentStatus(WsStatus.CONNECTED);
-            mWebSocket.send("socket");
-            connected();
-//            if (Looper.myLooper() != Looper.getMainLooper()) {
-////                JSONObject jo = new JSONObject();
-////                jo.put("act", 1);
-////                jo.put("projectname", App.getConfig().getProjectname());
-////                jo.put("mac", App.getConfig().getMac());
-////                jo.put("lightid", App.getConfig().getLightid());
-////                jo.put("version", App.getConfig().getVcode());
-////                    jo.put("act", 1);
-////                    jo.put("data", App.getConfig());
-//                //sendMessage(jo.toJSONString());
-//            } else {
-//                Log.e("websocket", "服务器连接成功");
-//            }
+
+            if (Looper.myLooper() != Looper.getMainLooper()) {
+                sendMessage("socket");
+                //connected();
+//                JSONObject jo = new JSONObject();
+//                jo.put("act", 1);
+//                jo.put("projectname", App.getConfig().getProjectname());
+//                jo.put("mac", App.getConfig().getMac());
+//                jo.put("lightid", App.getConfig().getLightid());
+//                jo.put("version", App.getConfig().getVcode());
+//                    jo.put("act", 1);
+//                    jo.put("data", App.getConfig());
+                //sendMessage(jo.toJSONString());
+            } else {
+                Log.e("websocket", "服务器连接成功");
+            }
         }
 
         @Override

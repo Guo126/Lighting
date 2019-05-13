@@ -34,8 +34,12 @@
         <activity android:name=".EditActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity android:name=".ChatActivity"/>
+
         <activity android:name=".LoginActivity"
             android:windowSoftInputMode="adjustResize|stateHidden|adjustPan"/>
+
+        <activity android:name=".FriendMessage"/>
+
         <activity android:name=".RegisterActivity"/>
     </application>
 
