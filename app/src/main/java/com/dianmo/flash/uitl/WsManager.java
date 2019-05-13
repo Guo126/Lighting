@@ -58,6 +58,7 @@ public class WsManager implements IWsManager {
 //                    jo.put("act", 1);
 //                    jo.put("data", App.getConfig());
                 //sendMessage(jo.toJSONString());
+                Log.e("websocket", "服务器连接成功");
             } else {
                 Log.e("websocket", "服务器连接成功");
             }
@@ -97,11 +98,11 @@ public class WsManager implements IWsManager {
                 wsMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("websocket", "服务器连接关闭中");
+                        Log.w("websocket", "服务器连接关闭中");
                     }
                 });
             } else {
-                Log.e("websocket", "服务器连接关闭中");
+                Log.w("websocket", "服务器连接关闭中");
             }
         }
 

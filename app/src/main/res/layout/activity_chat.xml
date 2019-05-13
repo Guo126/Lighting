@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="#FFFFFF"
     android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_marginTop="24dp"
             android:layout_height="50dp"
@@ -20,31 +21,30 @@
                 />
         </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/title"
+        android:layout_height="match_parent">
         <LinearLayout
-            android:id="@+id/main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/linearLayout"
-            android:orientation="vertical">
-        <FrameLayout android:layout_width="match_parent"
-            android:background="#FFFFFF"
-            android:orientation="vertical"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <ListView android:id="@+id/list"
                 android:layout_width="match_parent"
+                android:clickable="false"
                 android:divider="@null"
                 android:dividerHeight="10dp"
-                android:layout_height="wrap_content"
-
+                android:layout_height="match_parent"
+                android:stackFromBottom="true"
+                android:transcriptMode="alwaysScroll"
                 />
-
-        </FrameLayout>
-
+        </LinearLayout>
 
         <LinearLayout
-            android:layout_alignParentBottom="true"
             android:id="@+id/bottom"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -92,8 +92,8 @@
         </LinearLayout>
 
 
+    </LinearLayout>
 
-        </LinearLayout>
 
 
 

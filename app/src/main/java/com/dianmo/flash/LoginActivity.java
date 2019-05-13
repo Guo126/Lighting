@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.dianmo.flash.Entity.user.UserInner;
@@ -37,12 +38,14 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private UserInner userInner =new UserInner();
     public static WsManager wsManager ;
+    private ProgressBar bar;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         phone = (EditText) findViewById(R.id.phone_input);
+        bar = (ProgressBar) findViewById(R.id.bar);
         password = (EditText) findViewById(R.id.password_input);
         login = (Button) findViewById(R.id.btn_login);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
@@ -60,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                    bar.setVisibility(View.VISIBLE);
+                    login.setClickable(false);
                     NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/login", new HashMap<String, String>() {{
                                 put("phone", phone.getText().toString());
                                 put("psw", password.getText().toString());
@@ -88,6 +93,8 @@ public class LoginActivity extends AppCompatActivity {
                                         userInner = msg.getUserInner();
                                         Intent intent = new Intent(LoginActivity.this, MustActivity.class);
                                         intent.putExtra("userInner",userInner);
+                                        bar.setVisibility(View.INVISIBLE);
+                                        login.setClickable(true);
                                         startActivity(intent);
                                         LoginActivity.this.finish();
                                     }

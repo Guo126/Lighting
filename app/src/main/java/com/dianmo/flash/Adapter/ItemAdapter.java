@@ -56,7 +56,6 @@ public class ItemAdapter extends BaseAdapter {
                     }
 
                  Item item = mDatas.get(position);
-
                  //holder.image.setBackgroundResource();
                  holder.image.setImageResource(item.getSrc());
                  holder.text1.setText(item.getText1());
