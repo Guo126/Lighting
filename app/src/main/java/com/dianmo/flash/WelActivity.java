@@ -18,29 +18,32 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 public class WelActivity extends Activity {
     Graph list = new Graph();
     private SharedPreferences pre;
+    private boolean hasPermission = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         pre = getSharedPreferences("UserInfo",MODE_PRIVATE);
+
         final int isLogin = pre.getInt("isLogin",0);
         final int REQUEST_EXTERNAL_STORAGE = 1;
         String[] PERMISSIONS_STORAGE = {
                 "android.permission.READ_EXTERNAL_STORAGE",
                 "android.permission.WRITE_EXTERNAL_STORAGE",
+                "android.permission.INTERNET",
+                "android.permission.RECORD_AUDIO",
                 "android.permission.MOUNT_UNMOUNT_FILESYSTEMS"};
 
 
 
         //兼容Android6.0运行时权限解决方案
         try {
-            //检测是否有写的权限
-            int permission = ActivityCompat.checkSelfPermission(this,
-                    "android.permission.WRITE_EXTERNAL_STORAGE");
-            if (permission != PackageManager.PERMISSION_GRANTED) {
+
+            if (!hasPermission) {
                 // 没有写的权限，去申请写的权限，会弹出对话框
                 ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE);
+                hasPermission =true;
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -10,26 +10,29 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dianmo.flash.Entity.Friend;
+import com.dianmo.flash.Fragment.FragmentB;
 import com.dianmo.flash.R;
 
 import java.util.List;
 
 public class NewFriendAdapter extends BaseAdapter {
-    public NewFriendAdapter(Context context, List<Friend> fDatas) {
-        this.fInflater = LayoutInflater.from(context);
-        this.fDatas = fDatas;
+    public NewFriendAdapter(Context context, List<Friend> newfDatas, FragmentB fragmentB) {
+        this.new_fInflater = LayoutInflater.from(context);
+        this.new_fDatas = newfDatas;
+        fb=fragmentB;
     }
 
-    private LayoutInflater fInflater;
-    private List<Friend> fDatas;
+    private LayoutInflater new_fInflater;
+    private List<Friend> new_fDatas;
+    private FragmentB fb;
     @Override
     public int getCount() {
-        return fDatas.size();
+        return new_fDatas.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return fDatas.get(i);
+        return new_fDatas.get(i);
     }
 
     @Override
@@ -38,25 +41,48 @@ public class NewFriendAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         NewFriendAdapter.ViewHolder holder = null;
         if (view == null) {
-            view=fInflater.inflate(R.layout.activity_friendlist,viewGroup,false);
+            view=new_fInflater.inflate(R.layout.newfriendlist,viewGroup,false);
             holder=new NewFriendAdapter.ViewHolder();
-            holder.image=(ImageView) view.findViewById(R.id.friendImg);
-            holder.name=(TextView)view.findViewById(R.id.name);
-            holder.speak=(TextView)view.findViewById(R.id.speak);
-            //holder.ok=(Button)view.findViewById(R.id.)
+            holder.image=(ImageView) view.findViewById(R.id.newfriendImg);
+            holder.name=(TextView)view.findViewById(R.id.newfir_name);
+            holder.speak=(TextView)view.findViewById(R.id.newfir_speak);
+            holder.ok=(Button)view.findViewById(R.id.button_ok);
+            holder.refuse=(Button)view.findViewById(R.id.button_refuse);
             view.setTag(holder);
         } else {   //else里面说明，convertView已经被复用了，说明convertView中已经设置过tag了，即holder
             holder = (NewFriendAdapter.ViewHolder) view.getTag();
         }
-        Friend item = fDatas.get(i);
+        Friend item = new_fDatas.get(i);
 
         holder.image.setImageResource(item.getFriendImg());
         holder.name.setText(item.getFriendName());
         holder.speak.setText((item.getFriendSpeak()));
 
+        //添加ok和refuse响应函数
+        final View view1=view;
+        holder.ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(view1.getContext(),"同意",Toast.LENGTH_SHORT).show();
+                if(view1!=null)
+                {
+                    fb.NewFirCallback(i,true);
+                }
+            }
+        });
+        holder.refuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(view1.getContext(),"同意",Toast.LENGTH_SHORT).show();
+                if(view1!=null)
+                {
+                    fb.NewFirCallback(i,false);
+                }
+            }
+        });
         return view;
     }
 

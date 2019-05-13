@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.dianmo.flash.Adapter.FriItemAdapter;
 import com.dianmo.flash.ChatActivity;
 import com.dianmo.flash.Entity.FriItem;
+import com.dianmo.flash.Entity.user.UserInner;
 import com.dianmo.flash.R;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  */
 public class FragmentA extends Fragment {
     public static final int take =1;
-
+    private UserInner userInner = new UserInner();
     private ListView list;
     private ArrayList<FriItem> items;
 
@@ -48,6 +49,7 @@ public class FragmentA extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         list = (ListView)getActivity().findViewById(R.id.list);
+        userInner = (UserInner) getActivity().getIntent().getSerializableExtra("userInner");
         list.setAdapter(new FriItemAdapter(getContext(),items));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

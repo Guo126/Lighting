@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="24dp"
-            android:background="#e927afed">
+            android:background="#26FFFFFF">
 
             <ImageView
                 android:layout_width="26dp"

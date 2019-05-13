@@ -9,7 +9,7 @@
         tools:ignore="ProtectedPermissions" />
 
     <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
 
 
@@ -33,7 +33,7 @@
 
         <activity android:name=".ChatActivity"/>
         <activity android:name=".LoginActivity"/>
-
+        <activity android:name=".FriendMessage"/>
         <activity android:name=".RegisterActivity"/>
     </application>
 
