@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import com.dianmo.flash.Adapter.FriItemAdapter;
 import com.dianmo.flash.ChatActivity;
+import com.dianmo.flash.EditActivity;
 import com.dianmo.flash.Entity.FriItem;
 import com.dianmo.flash.Entity.user.UserInner;
 import com.dianmo.flash.R;
@@ -55,7 +56,7 @@ public class FragmentA extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FriItem item =items.get(position);
-                Intent intent =new Intent(getActivity(),ChatActivity.class);
+                Intent intent =new Intent(getActivity(), EditActivity.class);
                 intent.putExtra("name",item.getFriName());
                 startActivity(intent);
             }

@@ -45,13 +45,13 @@ public class RegisterActivity extends Activity {
                 final String phoneNum = phone.getText().toString().trim();
                 final String passwords = password.getText().toString().trim();
                 final String userName = name.getText().toString().trim();
-                if (phoneNum != null) {
+                if (!phoneNum.equals("")) {
                     if (phoneNum.length() != 11) {
                         Toast.makeText(getApplicationContext(), "手机号格式错误", Toast.LENGTH_SHORT).show();
                     } else {
-                        if(userName!=null){
+                        if(!userName.equals("")){
 
-                            if (passwords != null) {
+                            if (!passwords.equals("")) {
                                 editor.putString("userPhone", phoneNum);
                                 editor.putString("userPassword", passwords);
                                 editor.putString("myName",userName);

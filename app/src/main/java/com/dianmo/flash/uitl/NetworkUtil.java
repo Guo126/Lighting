@@ -106,6 +106,38 @@ public class NetworkUtil {
 
     }
 
+    public static <T> void transMsg(String url, String friId ,String msgPath, final Class<T> cls, final INetCallback<T> callback){
+        final String imageType = "multipart/form-data";
+        File file = new File(msgPath);
+        RequestBody fileBody = RequestBody.create(null, file);
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("msg",file.getName(),fileBody)
+                .addFormDataPart("target", friId)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+        client.newBuilder().readTimeout(1000, TimeUnit.MILLISECONDS).build().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                Log.d("Timeout","超时超时");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(response.isSuccessful()){
+                  //  callback.onSuccess(gson.fromJson(response.body().string(),cls));
+                }
+            }
+        });
+
+
+    }
+
+
 
 
 }

@@ -1,33 +1,33 @@
 package com.dianmo.flash.Entity;
 
 public class Friend {
-    private int friendImg = 0;
-    private String friendName = null;
-    private String FriendSpeak = null;
+    private String imgUrl;
+    private String name;
+    private String FriendSpeak;
 
     public Friend() {
     }
 
-    public Friend(int friendImg, String friendName, String friendSpeak) {
-        this.friendImg = friendImg;
-        this.friendName = friendName;
+    public Friend(String friendImg, String friendName, String friendSpeak) {
+        this.imgUrl = friendImg;
+        this.name = friendName;
         FriendSpeak = friendSpeak;
     }
 
-    public int getFriendImg() {
-        return friendImg;
+    public String getFriendImg() {
+        return imgUrl;
     }
 
-    public void setFriendImg(int friendImg) {
-        this.friendImg = friendImg;
+    public void setFriendImg(String friendImg) {
+        this.imgUrl = friendImg;
     }
 
     public String getFriendName() {
-        return friendName;
+        return name;
     }
 
     public void setFriendName(String friendName) {
-        this.friendName = friendName;
+        this.name = friendName;
     }
 
     public String getFriendSpeak() {

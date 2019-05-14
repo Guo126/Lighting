@@ -52,7 +52,7 @@ public class ListAdapter extends BaseAdapter {
         }
         Friend item = fDatas.get(i);
 
-        holder.image.setImageResource(item.getFriendImg());
+        holder.image.setImageResource(Integer.parseInt(item.getFriendImg()));
         holder.name.setText(item.getFriendName());
         holder.speak.setText((item.getFriendSpeak()));
 

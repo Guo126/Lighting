@@ -28,7 +28,7 @@ public class MustActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_must);
-        fragmentManager = getSupportFragmentManager();
+
         item1 = (ImageView) findViewById(R.id.item1);
         item1.setOnClickListener(this);
         item2 = (ImageView) findViewById(R.id.item2);
@@ -38,6 +38,7 @@ public class MustActivity extends AppCompatActivity implements View.OnClickListe
         item4 = (ImageView) findViewById(R.id.item4);
         item4.setOnClickListener(this);
         ivs = new ImageView[]{item1,item2,item3,item4};
+        fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();//创建一个事务
         transaction.replace(R.id.content, new FragmentA());
         transaction.commit();//事务一定要提交，replace才会有效

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.dianmo.flash.Entity.user.UserInner;
@@ -16,6 +17,7 @@ import com.dianmo.flash.Entity.user.UserMsg;
 import com.dianmo.flash.uitl.INetCallback;
 import com.dianmo.flash.uitl.NetworkUtil;
 
+import com.dianmo.flash.uitl.WsManager;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -25,6 +27,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText phone, password;
@@ -32,12 +37,15 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private UserInner userInner =new UserInner();
+    public static WsManager wsManager ;
+    private ProgressBar bar;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         phone = (EditText) findViewById(R.id.phone_input);
+        bar = (ProgressBar) findViewById(R.id.bar);
         password = (EditText) findViewById(R.id.password_input);
         login = (Button) findViewById(R.id.btn_login);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
@@ -55,8 +63,8 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
+                    bar.setVisibility(View.VISIBLE);
+                    login.setClickable(false);
                     NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/login", new HashMap<String, String>() {{
                                 put("phone", phone.getText().toString());
                                 put("psw", password.getText().toString());
@@ -72,9 +80,21 @@ public class LoginActivity extends AppCompatActivity {
                                             }
                                         });
                                     }else{
+                                        //实例化wsManager
+                                        wsManager = new WsManager.Builder(getBaseContext()).client(
+                                                new OkHttpClient().newBuilder()
+                                                        .pingInterval(15, TimeUnit.SECONDS)
+                                                        .retryOnConnectionFailure(true)
+                                                        .build())
+                                                .needReconnect(true)
+                                                .wsUrl("ws://39.106.81.100:9999/firefly/chat/"+phone.getText())
+                                                .build();
+                                        wsManager.startConnect();
                                         userInner = msg.getUserInner();
                                         Intent intent = new Intent(LoginActivity.this, MustActivity.class);
                                         intent.putExtra("userInner",userInner);
+                                        bar.setVisibility(View.INVISIBLE);
+                                        login.setClickable(true);
                                         startActivity(intent);
                                         LoginActivity.this.finish();
                                     }
