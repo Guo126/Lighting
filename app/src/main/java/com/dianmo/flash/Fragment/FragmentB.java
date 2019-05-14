@@ -27,11 +27,10 @@ import com.dianmo.flash.Adapter.ListAdapter;
 import com.dianmo.flash.Adapter.NewFriendAdapter;
 import com.dianmo.flash.ChatActivity;
 import com.dianmo.flash.Entity.Friend;
-<<<<<<< HEAD
+
 import com.dianmo.flash.FriendMessage;
-=======
+
 import com.dianmo.flash.Entity.user.UserInner;
->>>>>>> 30c82559549040b4fcf0b4f02ce6e9e690fc73ea
 import com.dianmo.flash.R;
 
 import java.math.BigInteger;

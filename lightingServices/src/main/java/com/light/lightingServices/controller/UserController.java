@@ -3,6 +3,7 @@ package com.light.lightingServices.controller;
 
 import com.light.lightingServices.model.DTO.BaseMsg;
 import com.light.lightingServices.model.DTO.FriendMsg;
+import com.light.lightingServices.model.DTO.FriendReqMsg;
 import com.light.lightingServices.model.DTO.UserMsg;
 import com.light.lightingServices.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Null;
 import java.math.BigInteger;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -41,6 +43,13 @@ public class UserController {
         return userServices.login(phone,psw);
     }
 
+    @PostMapping("/rename")
+    BaseMsg<Null> rename(@RequestParam("id") BigInteger uid,
+                         @RequestParam("name") String name)
+    {
+        return userServices.rename(uid,name);
+    }
+
 
     @PostMapping("/friend")
     BaseMsg<FriendMsg> getAFriend(@RequestParam("id") BigInteger id)
@@ -49,11 +58,25 @@ public class UserController {
     }
 
 
-    @PostMapping("/makeFriend")
-    BaseMsg<FriendMsg> makeFriend(@RequestParam("uid")BigInteger uid,
+    @PostMapping("/req")
+    BaseMsg<Null> requireFriend(@RequestParam("uid")BigInteger uid,
                                   @RequestParam("fid")BigInteger fid)
     {
-        return userServices.makeFriend(uid,fid);
+        return userServices.reqFriend(uid,fid);
+    }
+
+    @PostMapping("/reqList")
+    BaseMsg<List<FriendReqMsg>> getRequireFriendList(@RequestParam("uid") BigInteger uid)
+    {
+        return userServices.getRequireFriendList(uid);
+    }
+
+    @PostMapping("/agree")
+    BaseMsg<Null> agree(@RequestParam("uid") BigInteger uid,
+                        @RequestParam("fid") BigInteger fid,
+                        @RequestParam("agree") Boolean agree)
+    {
+        return userServices.agree(uid,fid,agree);
     }
 
 
@@ -61,7 +84,6 @@ public class UserController {
     BaseMsg<String> uploadIcon(@RequestParam("uid") BigInteger uid,
                              @RequestParam("img")MultipartFile img)
     {
-
         return userServices.uploadIcon(uid,img);
     }
 

@@ -1,17 +1,21 @@
 package com.light.lightingServices;
 
+import com.light.lightingServices.services.WebSocketService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.servlet.MultipartConfigElement;
 
 @SpringBootApplication
 public class LightingServicesApplication {
 
+
 	public static void main(String[] args) {
-		SpringApplication.run(LightingServicesApplication.class, args);
+		ConfigurableApplicationContext app = SpringApplication.run(LightingServicesApplication.class, args);
 	}
 
 	@Bean

@@ -1,30 +1,25 @@
 package com.light.lightingServices.services.impl;
 
-import com.light.lightingServices.model.DTO.BaseMsg;
-import com.light.lightingServices.model.DTO.CircleMsg;
-import com.light.lightingServices.model.DTO.FriendMsg;
-import com.light.lightingServices.model.DTO.UserMsg;
-import com.light.lightingServices.model.bean.Circle;
+import com.google.gson.Gson;
+import com.light.lightingServices.model.DTO.*;
+import com.light.lightingServices.model.bean.FriendReqQue;
 import com.light.lightingServices.model.bean.Friends;
 import com.light.lightingServices.model.bean.User;
 import com.light.lightingServices.repository.FriendRepository;
+import com.light.lightingServices.repository.FriendReqQueRepository;
 import com.light.lightingServices.repository.UserRepository;
 import com.light.lightingServices.services.UserServices;
+import com.light.lightingServices.services.WebSocketService;
 import com.light.lightingServices.uitl.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Null;
-import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +32,10 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     private
     FriendRepository friendRepository;
+
+    @Autowired
+    private
+    FriendReqQueRepository friendReqQueRepository;
 
 
     @Value(value = "${ResourcePath}")
@@ -116,34 +115,47 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public BaseMsg<FriendMsg> makeFriend(BigInteger uid, BigInteger fid) {
-        if(friendRepository.hasFriend(uid,fid) != null)
+    public BaseMsg<Null> reqFriend(BigInteger uid, BigInteger fid) {
+
+        BaseMsg<Null> result = new BaseMsg<>();
+
+        User friend = userRepository.getUser(fid);
+        User user=  userRepository.getUser(uid);
+        if(friend == null || user == null)
         {
-            BaseMsg<FriendMsg> baseMsg = new BaseMsg<>();
-            baseMsg.setSuccess(false);
-            baseMsg.setAlter("好友已经存在");
-            return baseMsg;
+            result.setSuccess(false);
+            result.setAlter("用户不存在");
+            return result;
         }
 
+        FriendReqMsg friendReqMsg = new FriendReqMsg(user.getName(),user.getPhone(),user.getIcon());
+        if(WebSocketService.hasExist(fid))
+        {
+            Gson gson = new Gson();
+            WebSocketService.sendMessage(uid.toString(),fid.toString(),gson.toJson(friendReqMsg));
+            FriendReqQue friendReqQue = new FriendReqQue(uid,fid);
+            friendReqQueRepository.save(friendReqQue);
+        }
+        else{
 
-        Friends friends = new Friends(uid,fid);
-        friendRepository.save(friends);
+            if(friendReqQueRepository.hasExist(uid,fid) != null)
+            {
+                result.setSuccess(false);
+                result.setAlter("已经发送过申请了");
+                return result;
+            }
+            else
+            {
+                FriendReqQue friendReqQue = new FriendReqQue(uid,fid);
+                friendReqQueRepository.save(friendReqQue);
+            }
 
-        Friends friends1 = new Friends(fid,uid);
-        friendRepository.save(friends1);
+        }
 
-        BaseMsg<FriendMsg> baseMsg = new BaseMsg<>();
-        baseMsg.setSuccess(true);
-
-        FriendMsg friendMsg = new FriendMsg();
-        User f = userRepository.getUser(fid);
-        friendMsg.setName(f.getName());
-        friendMsg.setImgUrl(f.getIcon());
-
-        baseMsg.setMsg(friendMsg);
-
-        return baseMsg;
+        result.setSuccess(true);
+        return result;
     }
+
 
     @Override
     public BaseMsg<String> uploadIcon(BigInteger id, MultipartFile file) {
@@ -171,6 +183,59 @@ public class UserServicesImpl implements UserServices {
         }
 
 
+        return baseMsg;
+    }
+
+    @Override
+    public BaseMsg<Null> rename(BigInteger id, String name) {
+        User user = userRepository.getUser(id);
+        if(user == null)
+        {
+            BaseMsg<Null> baseMsg = new BaseMsg<>();
+            baseMsg.setSuccess(false);
+            baseMsg.setAlter("用户不存在");
+            return baseMsg;
+        }
+
+        user.setName(name);
+        userRepository.save(user);
+
+        BaseMsg<Null> baseMsg = new BaseMsg<>();
+        baseMsg.setSuccess(true);
+        return baseMsg;
+    }
+
+    @Override
+    public BaseMsg<List<FriendReqMsg>> getRequireFriendList(BigInteger uid) {
+
+        List<FriendReqMsg> friendReqMsgList = friendReqQueRepository.getReqMsg(uid);
+        BaseMsg<List<FriendReqMsg>> result = new BaseMsg<>();
+        result.setSuccess(true);
+        result.setMsg(friendReqMsgList);
+
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public BaseMsg<Null> agree(BigInteger uid, BigInteger fid,Boolean agree) {
+        BaseMsg<Null> baseMsg = new BaseMsg<>();
+        friendReqQueRepository.deleteOne(uid,fid);
+        if (agree) {
+            if (friendRepository.hasFriend(uid, fid) != null) {
+                baseMsg.setSuccess(false);
+                baseMsg.setAlter("好友已经存在");
+                return baseMsg;
+            }
+
+            Friends friends = new Friends(uid, fid);
+            friendRepository.save(friends);
+
+            Friends friends1 = new Friends(fid, uid);
+            friendRepository.save(friends1);
+        }
+
+        baseMsg.setSuccess(true);
         return baseMsg;
     }
 }
