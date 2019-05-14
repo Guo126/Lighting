@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.dianmo.flash.Entity.FriendLists;
 import com.dianmo.flash.Entity.user.UserInner;
 import com.dianmo.flash.Entity.user.UserMsg;
 
@@ -26,7 +27,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -39,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private UserInner userInner =new UserInner();
     public static WsManager wsManager ;
     private ProgressBar bar;
-
+    private List<BigInteger> friIds;
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +96,8 @@ public class LoginActivity extends AppCompatActivity {
                                         userInner = msg.getUserInner();
                                         Intent intent = new Intent(LoginActivity.this, MustActivity.class);
                                         intent.putExtra("userInner",userInner);
+                                        friIds=userInner.getFriendIDList();
+                                        FriendLists.getInstance().GetFriends(friIds);
                                         bar.setVisibility(View.INVISIBLE);
                                         login.setClickable(true);
                                         startActivity(intent);

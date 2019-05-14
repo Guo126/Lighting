@@ -55,7 +55,7 @@ public class NetworkUtil {
         {
             formBody.add(key,map.get(key));
         }
-        Request request = new Request.Builder()//创建Request 对象。
+        final Request request = new Request.Builder()//创建Request 对象。
                 .url(url)
                 .post(formBody.build())//传递请求体
                 .build();
@@ -69,7 +69,9 @@ public class NetworkUtil {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if(response.isSuccessful()){
-                    callback.onSuccess(gson.fromJson(response.body().string(),cls));
+
+                    String str = response.body().string();
+                    callback.onSuccess(gson.fromJson(str,cls));
                 }
             }
         });

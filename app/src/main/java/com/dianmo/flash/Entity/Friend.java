@@ -3,15 +3,13 @@ package com.dianmo.flash.Entity;
 public class Friend {
     private String imgUrl;
     private String name;
-    private String FriendSpeak;
 
     public Friend() {
     }
 
-    public Friend(String friendImg, String friendName, String friendSpeak) {
+    public Friend(String friendImg, String friendName) {
         this.imgUrl = friendImg;
         this.name = friendName;
-        FriendSpeak = friendSpeak;
     }
 
     public String getFriendImg() {
@@ -30,11 +28,4 @@ public class Friend {
         this.name = friendName;
     }
 
-    public String getFriendSpeak() {
-        return FriendSpeak;
-    }
-
-    public void setFriendSpeak(String friendSpeak) {
-        FriendSpeak = friendSpeak;
-    }
 }
