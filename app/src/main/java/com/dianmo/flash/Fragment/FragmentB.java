@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
@@ -22,12 +23,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dianmo.flash.Adapter.ListAdapter;
 import com.dianmo.flash.Adapter.NewFriendAdapter;
 import com.dianmo.flash.EditActivity;
+import com.dianmo.flash.Entity.AddFriResult;
 import com.dianmo.flash.Entity.Friend;
 
+import com.dianmo.flash.Entity.user.FriendFromServ;
 import com.dianmo.flash.FriendMessage;
 
 import com.dianmo.flash.Entity.user.UserInner;
@@ -201,9 +205,26 @@ public class FragmentB extends Fragment {
     private void AddFriend(final String id)
     {
         final String u_id=((UserInner) getActivity().getIntent().getSerializableExtra("userInner")).getId().toString();
-        NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/makeFriend",new HashMap<String, String>(){{
-            put("uid",u_id);
-            put("fid",id);
-        }},null,null);
+        NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/req", new HashMap<String, String>() {{
+            put("uid", u_id);
+            put("fid", id);
+        }}, AddFriResult.class, new INetCallback<AddFriResult>() {
+            @Override
+            public void onSuccess(AddFriResult msg) {
+                Log.i("AddResult",String.valueOf(msg.isSuccess()));
+                if(msg.isSuccess())
+                {
+                    Looper.prepare();
+                    Toast.makeText(getContext(),"请求已发送",Toast.LENGTH_SHORT).show();
+
+                }
+                else
+                {
+                    Looper.prepare();
+                    Toast.makeText(getContext(),"请求失败",Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
     }
 }

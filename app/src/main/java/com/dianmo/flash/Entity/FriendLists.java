@@ -3,6 +3,7 @@ package com.dianmo.flash.Entity;
 import android.util.Log;
 
 import com.dianmo.flash.Entity.user.FriendFromServ;
+import com.dianmo.flash.Entity.user.NewFriendFromServ;
 import com.dianmo.flash.R;
 import com.dianmo.flash.uitl.INetCallback;
 import com.dianmo.flash.uitl.NetworkUtil;
@@ -22,7 +23,6 @@ public class FriendLists {
 
        /* newFriends.add(new NewFriend("wang",new BigInteger("17863108336"),String.valueOf(R.drawable.icon)));
         friends.add(new Friend(String.valueOf(R.drawable.icon),"零"));*/
-
     }
     public static FriendLists getInstance()
     {
@@ -45,6 +45,18 @@ public class FriendLists {
         this.newFriends = newFriends;
     }
 
+    public String GetFriName(String id)
+    {
+        for(Friend friend:friends)
+        {
+            if(friend.getId().equals(id))
+            {
+                return friend.getFriendName();
+            }
+        }
+        return null;
+    }
+
     public void GetFriends(List<BigInteger> ui)
     {
         //FriendLists.getInstance().getFriends().add(new Friend(String.valueOf(R.drawable.icon),"零2"));
@@ -61,11 +73,29 @@ public class FriendLists {
                 @Override
                 public void onSuccess(FriendFromServ msg) {
                     if (msg != null) {
+                        msg.getMsg().setId(id.toString());
                         FriendLists.getInstance().getFriends().add(msg.getMsg());
                     }
 
                 }
             });
         }
+    }
+
+    public void GetNewFriendsList(final BigInteger m_id)
+    {
+        NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/reqList", new HashMap<String, String>() {{
+            put("uid", m_id.toString());
+        }}, NewFriendFromServ.class, new INetCallback<NewFriendFromServ>() {
+            @Override
+            public void onSuccess(NewFriendFromServ msg) {
+                if (msg != null&&(msg.getNewFriendFromServ()!=null)) {
+                    for(NewFriend n:msg.getNewFriendFromServ())
+                    {
+                        FriendLists.getInstance().getNewFriends().add(n);
+                    }
+                }
+            }
+        });
     }
 }

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -98,6 +99,8 @@ public class LoginActivity extends AppCompatActivity {
                                         intent.putExtra("userInner",userInner);
                                         friIds=userInner.getFriendIDList();
                                         FriendLists.getInstance().GetFriends(friIds);
+                                        FriendLists.getInstance().GetNewFriendsList(userInner.getId());
+                                        Log.i("wwww",userInner.getName());
                                         bar.setVisibility(View.INVISIBLE);
                                         login.setClickable(true);
                                         startActivity(intent);
@@ -106,7 +109,6 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }
                     );
-
             }
         });
     }

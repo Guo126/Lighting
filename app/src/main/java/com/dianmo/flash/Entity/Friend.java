@@ -1,15 +1,28 @@
 package com.dianmo.flash.Entity;
 
+import com.google.gson.annotations.Expose;
+
 public class Friend {
     private String imgUrl;
     private String name;
+    @Expose(serialize = false,deserialize = false)
+    private String id;
 
     public Friend() {
     }
 
-    public Friend(String friendImg, String friendName) {
+    public Friend(String friendImg, String friendName,String id) {
         this.imgUrl = friendImg;
         this.name = friendName;
+        this.id=id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFriendImg() {
