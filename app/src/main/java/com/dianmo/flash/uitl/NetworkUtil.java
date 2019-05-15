@@ -71,6 +71,7 @@ public class NetworkUtil {
                 if(response.isSuccessful()){
 
                     String str = response.body().string();
+                    Log.d("TAG", str);
                     callback.onSuccess(gson.fromJson(str,cls));
                 }
             }

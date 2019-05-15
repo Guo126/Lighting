@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.dianmo.flash.Entity.user.FriendFromServ;
 import com.dianmo.flash.Entity.user.NewFriendFromServ;
-import com.dianmo.flash.R;
 import com.dianmo.flash.uitl.INetCallback;
 import com.dianmo.flash.uitl.NetworkUtil;
 
@@ -89,8 +88,9 @@ public class FriendLists {
         }}, NewFriendFromServ.class, new INetCallback<NewFriendFromServ>() {
             @Override
             public void onSuccess(NewFriendFromServ msg) {
-                if (msg != null&&(msg.getNewFriendFromServ()!=null)) {
-                    for(NewFriend n:msg.getNewFriendFromServ())
+                Log.i("NewFirList:::", String.valueOf(msg.isSuccess())+"he");
+                if (msg != null&&(msg.getMsg()!=null)) {
+                    for(NewFriend n:msg.getMsg())
                     {
                         FriendLists.getInstance().getNewFriends().add(n);
                     }

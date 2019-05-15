@@ -57,6 +57,14 @@ public class NewFriendAdapter extends BaseAdapter {
         }
         NewFriend item = new_fDatas.get(i);
 
+        if(item.getImg()==null)
+        {
+            item.setImg(String.valueOf(R.drawable.icon));
+        }
+        if(item.getName()==null)
+        {
+            item.setName("萤火");
+        }
         holder.image.setImageResource(Integer.parseInt(item.getImg()));
         holder.name.setText(item.getName());
 

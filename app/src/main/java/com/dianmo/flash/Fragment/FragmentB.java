@@ -29,8 +29,10 @@ import com.dianmo.flash.Adapter.ListAdapter;
 import com.dianmo.flash.Adapter.NewFriendAdapter;
 import com.dianmo.flash.EditActivity;
 import com.dianmo.flash.Entity.AddFriResult;
+import com.dianmo.flash.Entity.Agreement;
 import com.dianmo.flash.Entity.Friend;
 
+import com.dianmo.flash.Entity.NewFriend;
 import com.dianmo.flash.Entity.user.FriendFromServ;
 import com.dianmo.flash.FriendMessage;
 
@@ -183,17 +185,16 @@ public class FragmentB extends Fragment {
     {
         if(agree)
         {
-            //数据添加，自己添加，对方也添加
-            /*
-            *
-            *
-            *
-             */
+            NewFriend temp=FriendLists.getInstance().getNewFriends().get(i);
+            WetherAgree(((UserInner) getActivity().getIntent().getSerializableExtra("userInner")).getId(),temp.getFid().toString(),"true");
             FriendLists.getInstance().getNewFriends().remove(i);
+            FriendLists.getInstance().getFriends().add(new Friend(temp.getImg(),temp.getName(),temp.getFid().toString()));
             list.setAdapter(new ListAdapter(getContext(),FriendLists.getInstance().getFriends()));
+
         }
         else
         {
+            WetherAgree(((UserInner) getActivity().getIntent().getSerializableExtra("userInner")).getId(),FriendLists.getInstance().getNewFriends().get(i).getFid().toString(),"false");
             FriendLists.getInstance().getNewFriends().remove(i);
         }
 
@@ -224,6 +225,20 @@ public class FragmentB extends Fragment {
                     Toast.makeText(getContext(),"请求失败",Toast.LENGTH_SHORT).show();
 
                 }
+            }
+        });
+    }
+
+    private void WetherAgree(final BigInteger mid, final String f_id, final String ag)
+    {
+        NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/agree", new HashMap<String, String>() {{
+            put("uid", mid.toString());
+            put("fid", f_id);
+            put("agree",ag);
+        }}, Agreement.class, new INetCallback<Agreement>() {
+            @Override
+            public void onSuccess(Agreement msg) {
+
             }
         });
     }
