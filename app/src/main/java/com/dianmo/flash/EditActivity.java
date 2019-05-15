@@ -51,7 +51,7 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         //初始化好友id
-        friId = "17863129122";
+        friId = getIntent().getStringExtra("id");
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         phone = preferences.getString("phoneNum",null);
         datas = new ArrayList<String>();

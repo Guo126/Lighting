@@ -41,16 +41,16 @@ import com.dianmo.flash.Entity.user.UserInner;
 
 import com.dianmo.flash.Entity.FriendLists;
 
+import com.dianmo.flash.LoginActivity;
 import com.dianmo.flash.R;
 import com.dianmo.flash.uitl.INetCallback;
 import com.dianmo.flash.uitl.NetworkUtil;
+import com.dianmo.flash.uitl.WsManager;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
+import com.google.gson.Gson;
 
 
 /**
@@ -102,7 +102,18 @@ public class FragmentB extends Fragment {
                 Friend item =(Friend)parent.getAdapter().getItem(position);
                 Intent intent =new Intent(getActivity(), EditActivity.class);
                 intent.putExtra("name",item.getFriendName());
+                intent.putExtra("id",FriendLists.getInstance().GetFriId(item.getFriendName()));
                 startActivity(intent);
+            }
+        });
+        LoginActivity.wsManager.registe(new WsManager.IOnMsgReceive() {
+            @Override
+            public void onReceive(String code, String value) {
+                if(!code.equals("rq"))
+                    return;
+                Gson gson = new Gson();
+                FriendLists.getInstance().getNewFriends().add(gson.fromJson(value,NewFriend.class));
+                newfirList.setAdapter(new NewFriendAdapter(getContext(),FriendLists.getInstance().getNewFriends(),FragmentB.this));
             }
         });
         //添加

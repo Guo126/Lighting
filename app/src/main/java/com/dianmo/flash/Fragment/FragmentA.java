@@ -19,7 +19,9 @@ import com.dianmo.flash.MustActivity;
 import com.dianmo.flash.R;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -31,6 +33,7 @@ public class FragmentA extends Fragment {
     private UserInner userInner = new UserInner();
     private ListView list;
     private ArrayList<FriItem> items;
+    private FriItemAdapter adapter;
 
     public FragmentA() {
         // Required empty public constructor
@@ -54,14 +57,15 @@ public class FragmentA extends Fragment {
         super.onActivityCreated(savedInstanceState);
         list = (ListView)getActivity().findViewById(R.id.list);
         userInner = (UserInner) getActivity().getIntent().getSerializableExtra("userInner");
-        list.setAdapter(new FriItemAdapter(getContext(),items));
+        adapter =  new FriItemAdapter(getContext(),items);
+        list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FriItem item =items.get(position);
                 Intent intent =new Intent(getActivity(), EditActivity.class);
                 intent.putExtra("name",item.getFriName());
-               // intent.putExtra("id",item.get)
+                intent.putExtra("id",FriendLists.getInstance().GetFriId(item.getFriName()));
                 startActivity(intent);
             }
         });
@@ -69,19 +73,24 @@ public class FragmentA extends Fragment {
         ((MustActivity)getActivity()).setUpdateMsg(new MustActivity.IUpdateMsg() {
             @Override
             public void onUpdate(String id) {
-                String friName = "";
+                String friName = FriendLists.getInstance().GetFriName(id);
+                if(friName==null)
+                    return;
                 for( FriItem item :items){
                     if(item.getFriName().equals(friName)){
                         item.setMesNum(1+ item.getMesNum());
                         item.setFriMes(((MustActivity)getActivity()).data);
-                        item.setTime(String.valueOf(System.currentTimeMillis()));
+                        item.setTime(new SimpleDateFormat("hh:mm").format(new Date(System.currentTimeMillis())));
+                        adapter.notifyDataSetChanged();
                         return;
                     }
                 }
                 items.add(new FriItem(R.drawable.man1,1,friName,((MustActivity)getActivity()).data,String.valueOf(System.currentTimeMillis())));
+                adapter.notifyDataSetChanged();
             }
         });
     }
+
 
 
 

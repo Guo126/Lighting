@@ -91,22 +91,22 @@ public class WsManager implements IWsManager {
 
         @Override
         public void onMessage(WebSocket webSocket, final String text) {
-            String code = text.substring(0, 2);
+            String code = text.substring(0, 1);
             if (Looper.myLooper() != Looper.getMainLooper()) {
                 wsMainHandler.post(new Runnable() {
-                    String code = text.substring(0, 2);
+                    String code = text.substring(0, 1);
                     @Override
                     public void run() {
                         for (IOnMsgReceive onMsgReceive : onMsgReceiveList)
                             if (onMsgReceive != null)
-                                onMsgReceive.onReceive(code, text.substring(3));
+                                onMsgReceive.onReceive(code, text.substring(2));
                     }
                 });
             } else {
                 Log.e("websocket", "WsManager-----onMessage");
                 for (IOnMsgReceive onMsgReceive : onMsgReceiveList)
                     if (onMsgReceive != null)
-                        onMsgReceive.onReceive(code, text.substring(3));
+                        onMsgReceive.onReceive(code, text.substring(2));
             }
         }
 

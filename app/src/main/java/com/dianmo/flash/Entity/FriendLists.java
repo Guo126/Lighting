@@ -56,6 +56,18 @@ public class FriendLists {
         return null;
     }
 
+    public String GetFriId(String name)
+    {
+        for(Friend friend:friends)
+        {
+            if(friend.getFriendName().equals(name))
+            {
+                return friend.getId();
+            }
+        }
+        return null;
+    }
+
     public void GetFriends(List<BigInteger> ui)
     {
         //FriendLists.getInstance().getFriends().add(new Friend(String.valueOf(R.drawable.icon),"零2"));
@@ -81,6 +93,7 @@ public class FriendLists {
         }
     }
 
+
     public void GetNewFriendsList(final BigInteger m_id)
     {
         NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/reqList", new HashMap<String, String>() {{
@@ -98,4 +111,6 @@ public class FriendLists {
             }
         });
     }
+
+
 }

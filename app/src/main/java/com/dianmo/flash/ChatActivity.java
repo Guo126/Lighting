@@ -51,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatt);
         //初始化好友id
-        friId = "17863129122";
+        friId = getIntent().getStringExtra("id");
 
 
         name =(TextView) findViewById(R.id.name);
