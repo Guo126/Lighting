@@ -188,9 +188,12 @@ public class FragmentB extends Fragment {
             NewFriend temp=FriendLists.getInstance().getNewFriends().get(i);
             WetherAgree(((UserInner) getActivity().getIntent().getSerializableExtra("userInner")).getId(),temp.getFid().toString(),"true");
             FriendLists.getInstance().getNewFriends().remove(i);
-            FriendLists.getInstance().getFriends().add(new Friend(temp.getImg(),temp.getName(),temp.getFid().toString()));
-            list.setAdapter(new ListAdapter(getContext(),FriendLists.getInstance().getFriends()));
-
+            Friend tempFir=new Friend(temp.getImg(),temp.getName(),temp.getFid().toString());
+            if(!(FriendLists.getInstance().getFriends().contains(tempFir)))
+            {
+                FriendLists.getInstance().getFriends().add(tempFir);
+                list.setAdapter(new ListAdapter(getContext(),FriendLists.getInstance().getFriends()));
+            }
         }
         else
         {

@@ -1,6 +1,7 @@
 package com.dianmo.flash.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.dianmo.flash.Entity.Friend;
 import com.dianmo.flash.Entity.NewFriend;
 import com.dianmo.flash.Fragment.FragmentB;
 import com.dianmo.flash.R;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class NewFriendAdapter extends BaseAdapter {
         if (view == null) {
             view=new_fInflater.inflate(R.layout.newfriendlist,viewGroup,false);
             holder=new NewFriendAdapter.ViewHolder();
-            holder.image=(ImageView) view.findViewById(R.id.newfriendImg);
+            holder.image=(SimpleDraweeView) view.findViewById(R.id.newfriendImg);
             holder.name=(TextView)view.findViewById(R.id.newfir_name);
             holder.ok=(Button)view.findViewById(R.id.button_ok);
             holder.refuse=(Button)view.findViewById(R.id.button_refuse);
@@ -65,7 +67,7 @@ public class NewFriendAdapter extends BaseAdapter {
         {
             item.setName("萤火");
         }
-        holder.image.setImageResource(Integer.parseInt(item.getImg()));
+        holder.image.setImageURI(Uri.parse(item.getImg()));
         holder.name.setText(item.getName());
 
         //添加ok和refuse响应函数
@@ -94,7 +96,7 @@ public class NewFriendAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        ImageView image;
+        SimpleDraweeView image;
         TextView name;
         Button ok;
         Button refuse;
