@@ -132,7 +132,7 @@ public class UserServicesImpl implements UserServices {
         if(WebSocketService.hasExist(fid))
         {
             Gson gson = new Gson();
-            WebSocketService.sendMessage(uid.toString(),fid.toString(),gson.toJson(friendReqMsg));
+            WebSocketService.sendMessage(uid.toString(),fid.toString(),"rq"+ gson.toJson(friendReqMsg));
             FriendReqQue friendReqQue = new FriendReqQue(uid,fid);
             friendReqQueRepository.save(friendReqQue);
         }

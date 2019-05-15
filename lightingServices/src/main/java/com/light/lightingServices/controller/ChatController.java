@@ -22,7 +22,7 @@ public class ChatController {
                                    @RequestParam("msg") String msg)
     {
         BaseMsg<Null> baseMsg = new BaseMsg<>();
-        WebSocketService.sendMessage(uid,tid,msg);
+        WebSocketService.sendMessage(uid,tid,"pp"+msg);
         baseMsg.setSuccess(true);
         return baseMsg;
     }

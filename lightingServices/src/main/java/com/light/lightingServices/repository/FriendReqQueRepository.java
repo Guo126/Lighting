@@ -15,7 +15,7 @@ public interface FriendReqQueRepository extends JpaRepository<FriendReqQue,Integ
     Integer hasExist(BigInteger uid,BigInteger fid);
 
     @Query(value = "select new com.light.lightingServices.model.DTO.FriendReqMsg(u.name,u.phone,u.icon) " +
-            "from User u,FriendReqQue frq where u.phone=frq.fid and frq.uid=?1")
+            "from User u,FriendReqQue frq where u.phone=frq.uid and frq.fid=?1")
     List<FriendReqMsg> getReqMsg(BigInteger uid);
 
     @Query(value = "delete from friend_require_que where uid=?1 and fid=?2",nativeQuery = true)
