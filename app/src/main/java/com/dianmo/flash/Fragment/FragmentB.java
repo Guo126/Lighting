@@ -114,7 +114,6 @@ public class FragmentB extends Fragment {
             public void onReceive(String code, String value) {
                 if(code.equals("rq")) {
                     Gson gson = new Gson();
-                    FriendLists.getInstance().getFriends().clear();
                     FriendLists.getInstance().getNewFriends().add(gson.fromJson(value.substring(11), NewFriend.class));
                     newfirList.setAdapter(new NewFriendAdapter(getContext(), FriendLists.getInstance().getNewFriends(), FragmentB.this));
                 }
@@ -122,12 +121,13 @@ public class FragmentB extends Fragment {
                 {
                     Gson gson = new Gson();
                     final BasMsg basMsg = gson.fromJson(value.substring(11), BasMsg.class);
-                    NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/friend", new HashMap<String, String>() {{
+                    if(!basMsg.isSuccess())
+                        return;
+                    NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/man", new HashMap<String, String>() {{
                         put("id", basMsg.getMsg());
                     }}, FriendFromServ.class, new INetCallback<FriendFromServ>() {
                         @Override
                         public void onSuccess(FriendFromServ msg) {
-                            FriendLists.getInstance().getFriends().clear();
                             FriendLists.getInstance().getFriends().add(msg.getMsg());
                             mHandler.post(new Runnable() {
                                 @Override
