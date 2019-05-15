@@ -93,6 +93,8 @@ public class LoginActivity extends AppCompatActivity {
                                         userInner = msg.getUserInner();
                                         Intent intent = new Intent(LoginActivity.this, MustActivity.class);
                                         intent.putExtra("userInner",userInner);
+                                        editor.putString("phoneNum",phone.getText().toString());
+                                        editor.apply();
                                         bar.setVisibility(View.INVISIBLE);
                                         login.setClickable(true);
                                         startActivity(intent);

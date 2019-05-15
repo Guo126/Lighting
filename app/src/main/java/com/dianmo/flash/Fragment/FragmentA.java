@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.dianmo.flash.Adapter.FriItemAdapter;
-import com.dianmo.flash.ChatActivity;
 import com.dianmo.flash.EditActivity;
 import com.dianmo.flash.Entity.FriItem;
 import com.dianmo.flash.Entity.user.UserInner;
+import com.dianmo.flash.MustActivity;
 import com.dianmo.flash.R;
 
 import java.util.ArrayList;
@@ -32,12 +32,12 @@ public class FragmentA extends Fragment {
     public FragmentA() {
         // Required empty public constructor
         items = new ArrayList<FriItem>();
-        items.add(new FriItem(R.drawable.girl,2,"叶轻灵","在吗?","11:12"));
-        items.add(new FriItem(R.drawable.man1,2,"小海","晚上一起去吃饭吧","10:45"));
-        items.add(new FriItem(R.drawable.man2,2,"王晴","晚上一起","昨天"));
-        items.add(new FriItem(R.drawable.man3,2,"吴瑶","去吃饭吧","3月1日"));
+        items.add(new FriItem(R.drawable.man1,1,"小海","晚上一起去吃饭吧","10:45"));
+
 
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,10 +58,28 @@ public class FragmentA extends Fragment {
                 FriItem item =items.get(position);
                 Intent intent =new Intent(getActivity(), EditActivity.class);
                 intent.putExtra("name",item.getFriName());
+               // intent.putExtra("id",item.get)
                 startActivity(intent);
             }
         });
+
+        ((MustActivity)getActivity()).setUpdateMsg(new MustActivity.IUpdateMsg() {
+            @Override
+            public void onUpdate(String id) {
+                String friName = "";
+                for( FriItem item :items){
+                    if(item.getFriName().equals(friName)){
+                        item.setMesNum(1+ item.getMesNum());
+                        item.setFriMes(((MustActivity)getActivity()).data);
+                        item.setTime(String.valueOf(System.currentTimeMillis()));
+                        return;
+                    }
+                }
+                items.add(new FriItem(R.drawable.man1,1,friName,((MustActivity)getActivity()).data,String.valueOf(System.currentTimeMillis())));
+            }
+        });
     }
+
 
 
 }

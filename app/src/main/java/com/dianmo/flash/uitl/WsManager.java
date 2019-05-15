@@ -7,6 +7,9 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import okhttp3.OkHttpClient;
@@ -39,6 +42,24 @@ public class WsManager implements IWsManager {
         }
     };
 
+    public interface IOnMsgReceive{
+        void onReceive(String code,String value);
+    }
+
+    private List<IOnMsgReceive> onMsgReceiveList = new ArrayList<>();
+
+    public void registe(IOnMsgReceive onMsgReceive)
+    {
+        onMsgReceiveList.add(onMsgReceive);
+    }
+
+
+    public void remove(IOnMsgReceive onMsgReceive)
+    {
+        onMsgReceiveList.remove(onMsgReceive);
+    }
+
+
     private WebSocketListener mWebSocketListener = new WebSocketListener() {
 
         @Override
@@ -48,16 +69,6 @@ public class WsManager implements IWsManager {
 
             if (Looper.myLooper() != Looper.getMainLooper()) {
                 sendMessage("socket");
-                //connected();
-//                JSONObject jo = new JSONObject();
-//                jo.put("act", 1);
-//                jo.put("projectname", App.getConfig().getProjectname());
-//                jo.put("mac", App.getConfig().getMac());
-//                jo.put("lightid", App.getConfig().getLightid());
-//                jo.put("version", App.getConfig().getVcode());
-//                    jo.put("act", 1);
-//                    jo.put("data", App.getConfig());
-                //sendMessage(jo.toJSONString());
                 Log.e("websocket", "服务器连接成功");
             } else {
                 Log.e("websocket", "服务器连接成功");
@@ -80,15 +91,22 @@ public class WsManager implements IWsManager {
 
         @Override
         public void onMessage(WebSocket webSocket, final String text) {
+            String code = text.substring(0, 2);
             if (Looper.myLooper() != Looper.getMainLooper()) {
                 wsMainHandler.post(new Runnable() {
+                    String code = text.substring(0, 2);
                     @Override
                     public void run() {
-                        Log.e("websocket", "WsManager-----onMessage");
+                        for (IOnMsgReceive onMsgReceive : onMsgReceiveList)
+                            if (onMsgReceive != null)
+                                onMsgReceive.onReceive(code, text.substring(3));
                     }
                 });
             } else {
                 Log.e("websocket", "WsManager-----onMessage");
+                for (IOnMsgReceive onMsgReceive : onMsgReceiveList)
+                    if (onMsgReceive != null)
+                        onMsgReceive.onReceive(code, text.substring(3));
             }
         }
 

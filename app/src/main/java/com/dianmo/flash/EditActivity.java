@@ -1,6 +1,7 @@
 package com.dianmo.flash;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
@@ -20,12 +21,15 @@ import android.widget.TextView;
 
 import com.dianmo.flash.Adapter.RecorderAdapter;
 import com.dianmo.flash.Adapter.TextAdapter;
+import com.dianmo.flash.Entity.user.BasMsg;
 import com.dianmo.flash.Entity.user.ChatMsg;
 import com.dianmo.flash.uitl.INetCallback;
 import com.dianmo.flash.uitl.NetworkUtil;
+import com.dianmo.flash.uitl.WsManager;
 import com.dianmo.view.AudioButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EditActivity extends AppCompatActivity {
@@ -40,12 +44,16 @@ public class EditActivity extends AppCompatActivity {
     private String  myMsg;
     private List<String> datas;
     private TextAdapter adapter;
+    private SharedPreferences preferences;
+    private  String phone = null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         //初始化好友id
         friId = "17863129122";
+        preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+        phone = preferences.getString("phoneNum",null);
         datas = new ArrayList<String>();
         main = (LinearLayout)findViewById(R.id.main);
         name =(TextView) findViewById(R.id.name);
@@ -65,14 +73,32 @@ public class EditActivity extends AppCompatActivity {
             }
         });
 
+        LoginActivity.wsManager.registe(new WsManager.IOnMsgReceive() {
+                @Override
+                public void onReceive(String code,String value) {
+                    if (!code.equals("pp"))
+                        return;
+                    datas.add("a" + value.substring(11));
+                    autoFlash();
+                }
+        });
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 myMsg = editText.getText().toString();
                 editText.setText("");
-                datas.add(myMsg);
+                datas.add("b"+myMsg);
                 autoFlash();
-                LoginActivity.wsManager.sendMessage(friId+myMsg);
+                NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/chat/p2p/str", new HashMap<String, String>() {{
+                    put("uid", phone);
+                    put("target", friId);
+                    put("msg", myMsg);
+                }}, BasMsg.class, new INetCallback<BasMsg>() {
+                    @Override
+                    public void onSuccess(BasMsg msg) {
+
+                    }
+                });
             }
         });
 
