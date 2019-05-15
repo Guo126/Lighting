@@ -59,13 +59,14 @@ public class WebSocketService {
     public static void sendMessage(String uid,String tid,String msg)
     {
         String newMsg = uid + msg;
-        if(webSocketHashMap.get(tid) != null)
+        if(webSocketHashMap.containsKey(tid))
         {
             WebSocketService webSocketService = webSocketHashMap.get(tid);
             try {
                 webSocketService.sendToUser(newMsg,tid);
             } catch (IOException e) {
                 e.printStackTrace();
+                log.info(e.toString());
             }
         }
         else{
@@ -93,7 +94,7 @@ public class WebSocketService {
 
     public static void sendMessage(String tid,byte[] msg)
     {
-        if (webSocketHashMap.get(tid) != null) {
+        if (webSocketHashMap.containsKey(tid)) {
             WebSocketService webSocketService = webSocketHashMap.get(tid);
             try {
                 webSocketService.sendToUser(msg, tid);
@@ -113,10 +114,12 @@ public class WebSocketService {
     public void onError(Session session,Throwable throwable)
     {
         throwable.printStackTrace();
+        log.info("error",throwable.toString());
     }
 
     private void sendMessage(String msg) throws IOException
     {
+        log.info("send msg to"+id);
         this.session.getBasicRemote().sendText(msg);
     }
     private void sendMessage(byte[] msg) throws IOException {
@@ -126,12 +129,12 @@ public class WebSocketService {
 
     private void sendToUser(String msg, String id) throws IOException
     {
-        if(webSocketHashMap.get(id) != null)
+        if(webSocketHashMap.containsKey(id))
         {
-            if(!this.id.equals(id))
-            {
+            //if(!this.id.equals(id))
+            //{
                 webSocketHashMap.get(id).sendMessage(msg);
-            }
+            //}
         }
     }
 
