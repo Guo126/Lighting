@@ -45,16 +45,22 @@ public class ListAdapter extends BaseAdapter {
             holder=new ViewHolder();
             holder.image=(ImageView) view.findViewById(R.id.friendImg);
             holder.name=(TextView)view.findViewById(R.id.name);
-            holder.speak=(TextView)view.findViewById(R.id.speak);
             view.setTag(holder);
         } else {   //else里面说明，convertView已经被复用了，说明convertView中已经设置过tag了，即holder
             holder = (ViewHolder) view.getTag();
         }
         Friend item = fDatas.get(i);
 
-        holder.image.setImageResource(item.getFriendImg());
+        if(item.getFriendImg()==null)
+        {
+            item.setFriendImg(String.valueOf(R.drawable.icon));
+        }
+        holder.image.setImageResource(Integer.parseInt(item.getFriendImg()));
+        if(item.getFriendName()==null)
+        {
+            item.setFriendName("萤火");
+        }
         holder.name.setText(item.getFriendName());
-        holder.speak.setText((item.getFriendSpeak()));
 
         return view;
     }
@@ -62,6 +68,5 @@ public class ListAdapter extends BaseAdapter {
     private class ViewHolder {
         ImageView image;
         TextView name;
-        TextView speak;
     }
 }

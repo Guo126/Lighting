@@ -13,11 +13,14 @@ import android.widget.ListView;
 import com.dianmo.flash.Adapter.FriItemAdapter;
 import com.dianmo.flash.EditActivity;
 import com.dianmo.flash.Entity.FriItem;
+import com.dianmo.flash.Entity.FriendLists;
 import com.dianmo.flash.Entity.user.UserInner;
 import com.dianmo.flash.MustActivity;
 import com.dianmo.flash.R;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**

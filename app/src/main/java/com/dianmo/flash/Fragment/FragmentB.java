@@ -1,10 +1,13 @@
 package com.dianmo.flash.Fragment;
 
 
+import android.app.AlertDialog;;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import android.os.Debug;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
@@ -20,17 +23,32 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.dianmo.flash.Adapter.ListAdapter;
 import com.dianmo.flash.Adapter.NewFriendAdapter;
 import com.dianmo.flash.EditActivity;
+import com.dianmo.flash.Entity.AddFriResult;
 import com.dianmo.flash.Entity.Friend;
+
+import com.dianmo.flash.Entity.user.FriendFromServ;
 import com.dianmo.flash.FriendMessage;
+
 import com.dianmo.flash.Entity.user.UserInner;
+
+
+import com.dianmo.flash.Entity.FriendLists;
+
 import com.dianmo.flash.R;
+import com.dianmo.flash.uitl.INetCallback;
+import com.dianmo.flash.uitl.NetworkUtil;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -39,20 +57,14 @@ import java.util.List;
 public class FragmentB extends Fragment {
     public static final int take =1;
 
+
     private ListView list;
     private ListView newfirList;
-    private List<BigInteger> friIds;
-    private ArrayList<Friend> friends;
-    private ArrayList<Friend> findFri;
-    private ArrayList<Friend> newFriends;
-    public FragmentB() {
-        // Required empty public constructor
-        //加载好友列表
-        friends = new ArrayList<Friend>();
-        findFri = new ArrayList<Friend>();
-        newFriends=new ArrayList<Friend>();
 
-        newFriends.add(new Friend(R.drawable.girl,"小ai","dd"));
+    private ArrayList<Friend> findFri;
+
+    public FragmentB() {
+        findFri = new ArrayList<Friend>();
     }
 
     @Override
@@ -65,15 +77,14 @@ public class FragmentB extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        friIds = ((UserInner) getActivity().getIntent().getSerializableExtra("userInner")).getFriendIDList();
 
         ImageView add=(ImageView)getActivity().findViewById(R.id.imageView);
         final EditText find=(EditText)getActivity().findViewById(R.id.friendFind);
         list = (ListView)getActivity().findViewById(R.id.list);
         newfirList=(ListView)getActivity().findViewById(R.id.newfirList);
 
-        newfirList.setAdapter(new NewFriendAdapter(getContext(),newFriends,this));
-        list.setAdapter(new ListAdapter(getContext(),friends));
+        newfirList.setAdapter(new NewFriendAdapter(getContext(),FriendLists.getInstance().getNewFriends(),this));
+        list.setAdapter(new ListAdapter(getContext(),FriendLists.getInstance().getFriends()));
         newfirList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -96,7 +107,29 @@ public class FragmentB extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("请输入对方萤火号");    //设置对话框标题
+                builder.setCancelable(true);
 
+                final EditText edit = new EditText(getContext());
+                builder.setView(edit);
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(edit.getText()!=null)
+                        {
+                            //发出添加请求
+                            AddFriend(edit.getText().toString());
+                        }
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
             }
         });
 
@@ -109,7 +142,7 @@ public class FragmentB extends Fragment {
                     if(!findName.equals(""))
                     {
                         boolean findable=false;
-                        for(Friend friend:friends)
+                        for(Friend friend:FriendLists.getInstance().getFriends())
                         {
                             if(friend.getFriendName().equals(findName))
                             {
@@ -119,7 +152,7 @@ public class FragmentB extends Fragment {
                         }
                         if(!findable)
                         {
-                            list.setAdapter(new ListAdapter(getContext(),friends));
+                            list.setAdapter(new ListAdapter(getContext(),FriendLists.getInstance().getFriends()));
                             findFri.clear();
                             findable=false;
                         }
@@ -129,13 +162,13 @@ public class FragmentB extends Fragment {
                         }
                         else
                         {
-                            list.setAdapter(new ListAdapter(getContext(),friends));
+                            list.setAdapter(new ListAdapter(getContext(),FriendLists.getInstance().getFriends()));
                             findFri.clear();
                         }
                     }
                     else
                     {
-                        list.setAdapter(new ListAdapter(getContext(),friends));
+                        list.setAdapter(new ListAdapter(getContext(),FriendLists.getInstance().getFriends()));
                         findFri.clear();
                     }
                     return true;
@@ -150,21 +183,48 @@ public class FragmentB extends Fragment {
     {
         if(agree)
         {
-            //数据添加
+            //数据添加，自己添加，对方也添加
             /*
             *
             *
             *
              */
-            newFriends.remove(i);
-            list.setAdapter(new ListAdapter(getContext(),friends));
+            FriendLists.getInstance().getNewFriends().remove(i);
+            list.setAdapter(new ListAdapter(getContext(),FriendLists.getInstance().getFriends()));
         }
         else
         {
-            newFriends.remove(i);
+            FriendLists.getInstance().getNewFriends().remove(i);
         }
 
-        newfirList.setAdapter(new NewFriendAdapter(getContext(),newFriends,this));
+        newfirList.setAdapter(new NewFriendAdapter(getContext(),FriendLists.getInstance().getNewFriends(),this));
     }
 
+
+
+    private void AddFriend(final String id)
+    {
+        final String u_id=((UserInner) getActivity().getIntent().getSerializableExtra("userInner")).getId().toString();
+        NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/req", new HashMap<String, String>() {{
+            put("uid", u_id);
+            put("fid", id);
+        }}, AddFriResult.class, new INetCallback<AddFriResult>() {
+            @Override
+            public void onSuccess(AddFriResult msg) {
+                Log.i("AddResult",String.valueOf(msg.isSuccess()));
+                if(msg.isSuccess())
+                {
+                    Looper.prepare();
+                    Toast.makeText(getContext(),"请求已发送",Toast.LENGTH_SHORT).show();
+
+                }
+                else
+                {
+                    Looper.prepare();
+                    Toast.makeText(getContext(),"请求失败",Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+    }
 }

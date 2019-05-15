@@ -1,4 +1,4 @@
-package com.light.lightingServices;
+package com.light.lightingServices.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
