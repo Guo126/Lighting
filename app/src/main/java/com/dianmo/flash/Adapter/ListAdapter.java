@@ -1,6 +1,7 @@
 package com.dianmo.flash.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.dianmo.flash.Entity.FriItem;
 import com.dianmo.flash.Entity.Friend;
 import com.dianmo.flash.R;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class ListAdapter extends BaseAdapter {
         if (view == null) {
             view=fInflater.inflate(R.layout.activity_friendlist,viewGroup,false);
             holder=new ViewHolder();
-            holder.image=(ImageView) view.findViewById(R.id.friendImg);
+            holder.image=(SimpleDraweeView) view.findViewById(R.id.friendImg);
             holder.name=(TextView)view.findViewById(R.id.name);
             view.setTag(holder);
         } else {   //else里面说明，convertView已经被复用了，说明convertView中已经设置过tag了，即holder
@@ -55,7 +57,7 @@ public class ListAdapter extends BaseAdapter {
         {
             item.setFriendImg(String.valueOf(R.drawable.icon));
         }
-        holder.image.setImageResource(Integer.parseInt(item.getFriendImg()));
+        holder.image.setImageURI(Uri.parse(item.getFriendImg()));
         if(item.getFriendName()==null)
         {
             item.setFriendName("萤火");
@@ -66,7 +68,7 @@ public class ListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        ImageView image;
+        SimpleDraweeView image;
         TextView name;
     }
 }
