@@ -15,8 +15,6 @@ import com.dianmo.flash.Fragment.FragmentC;
 import com.dianmo.flash.Fragment.FragmentD;
 import com.dianmo.flash.uitl.WsManager;
 
-import java.util.List;
-
 
 public class MustActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -46,7 +44,7 @@ public class MustActivity extends AppCompatActivity implements View.OnClickListe
         transaction.commit();//事务一定要提交，replace才会有效
         ivs[0].setImageResource(R.drawable.messagese);
 
-        LoginActivity.wsManager.registe(new WsManager.IOnMsgReceive() {
+        LoginActivity.wsManager.register(new WsManager.IOnMsgReceive() {
             @Override
             public void onReceive(String code,String value) {
                 if (!code.equals("pp"))

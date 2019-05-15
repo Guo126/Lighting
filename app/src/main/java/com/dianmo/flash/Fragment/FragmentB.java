@@ -4,9 +4,9 @@ package com.dianmo.flash.Fragment;
 import android.app.AlertDialog;;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,6 +33,7 @@ import com.dianmo.flash.Entity.Agreement;
 import com.dianmo.flash.Entity.Friend;
 
 import com.dianmo.flash.Entity.NewFriend;
+import com.dianmo.flash.Entity.user.BasMsg;
 import com.dianmo.flash.Entity.user.FriendFromServ;
 import com.dianmo.flash.FriendMessage;
 
@@ -64,6 +65,8 @@ public class FragmentB extends Fragment {
     private ListView newfirList;
 
     private ArrayList<Friend> findFri;
+
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public FragmentB() {
         findFri = new ArrayList<Friend>();
@@ -106,14 +109,36 @@ public class FragmentB extends Fragment {
                 startActivity(intent);
             }
         });
-        LoginActivity.wsManager.registe(new WsManager.IOnMsgReceive() {
+        LoginActivity.wsManager.register(new WsManager.IOnMsgReceive() {
             @Override
             public void onReceive(String code, String value) {
-                if(!code.equals("rq"))
-                    return;
-                Gson gson = new Gson();
-                FriendLists.getInstance().getNewFriends().add(gson.fromJson(value,NewFriend.class));
-                newfirList.setAdapter(new NewFriendAdapter(getContext(),FriendLists.getInstance().getNewFriends(),FragmentB.this));
+                if(code.equals("rq")) {
+                    Gson gson = new Gson();
+                    FriendLists.getInstance().getFriends().clear();
+                    FriendLists.getInstance().getNewFriends().add(gson.fromJson(value.substring(11), NewFriend.class));
+                    newfirList.setAdapter(new NewFriendAdapter(getContext(), FriendLists.getInstance().getNewFriends(), FragmentB.this));
+                }
+                else if(code.equals("rt"))
+                {
+                    Gson gson = new Gson();
+                    final BasMsg basMsg = gson.fromJson(value.substring(11), BasMsg.class);
+                    NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/friend", new HashMap<String, String>() {{
+                        put("id", basMsg.getMsg());
+                    }}, FriendFromServ.class, new INetCallback<FriendFromServ>() {
+                        @Override
+                        public void onSuccess(FriendFromServ msg) {
+                            FriendLists.getInstance().getFriends().clear();
+                            FriendLists.getInstance().getFriends().add(msg.getMsg());
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    newfirList.setAdapter(new NewFriendAdapter(getContext(), FriendLists.getInstance().getNewFriends(), FragmentB.this));
+                                }
+                            });
+                        }
+                    });
+
+                }
             }
         });
         //添加

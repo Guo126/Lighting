@@ -48,7 +48,7 @@ public class WsManager implements IWsManager {
 
     private List<IOnMsgReceive> onMsgReceiveList = new ArrayList<>();
 
-    public void registe(IOnMsgReceive onMsgReceive)
+    public void register(IOnMsgReceive onMsgReceive)
     {
         onMsgReceiveList.add(onMsgReceive);
     }
@@ -91,10 +91,10 @@ public class WsManager implements IWsManager {
 
         @Override
         public void onMessage(WebSocket webSocket, final String text) {
-            String code = text.substring(0, 1);
+            String code = text.substring(0, 2);
             if (Looper.myLooper() != Looper.getMainLooper()) {
                 wsMainHandler.post(new Runnable() {
-                    String code = text.substring(0, 1);
+                    String code = text.substring(0, 2);
                     @Override
                     public void run() {
                         for (IOnMsgReceive onMsgReceive : onMsgReceiveList)
