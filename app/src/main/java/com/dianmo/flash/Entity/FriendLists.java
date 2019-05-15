@@ -68,6 +68,17 @@ public class FriendLists {
         return null;
     }
 
+    public String GetFriImg(String id){
+        for(Friend friend:friends)
+        {
+            if(friend.getId().equals(id))
+            {
+                return friend.getFriendImg();
+            }
+        }
+        return null;
+    }
+
     public void GetFriends(List<BigInteger> ui)
     {
         //FriendLists.getInstance().getFriends().add(new Friend(String.valueOf(R.drawable.icon),"零2"));

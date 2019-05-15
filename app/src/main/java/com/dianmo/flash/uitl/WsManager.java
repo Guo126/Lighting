@@ -103,7 +103,7 @@ public class WsManager implements IWsManager {
                     }
                 });
             } else {
-                Log.e("websocket", "WsManager-----onMessage");
+
                 for (IOnMsgReceive onMsgReceive : onMsgReceiveList)
                     if (onMsgReceive != null)
                         onMsgReceive.onReceive(code, text.substring(2));
@@ -143,7 +143,7 @@ public class WsManager implements IWsManager {
         public void onFailure(WebSocket webSocket, final Throwable t, final Response response) {
             try {
                 tryReconnect();
-                Log.e("liusehngjei", "[走的链接失败这里！！！！！！！！！！！！！！！！]");
+                Log.e("liusehngjei", "[链接失败这里]");
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     wsMainHandler.post(new Runnable() {
                         @Override
