@@ -1,17 +1,28 @@
 package com.dianmo.flash.Entity;
 
+import com.google.gson.annotations.Expose;
+
 public class Friend {
     private String imgUrl;
     private String name;
-    private String FriendSpeak;
+    @Expose(serialize = false,deserialize = false)
+    private String id;
 
     public Friend() {
     }
 
-    public Friend(String friendImg, String friendName, String friendSpeak) {
+    public Friend(String friendImg, String friendName,String id) {
         this.imgUrl = friendImg;
         this.name = friendName;
-        FriendSpeak = friendSpeak;
+        this.id=id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFriendImg() {
@@ -30,11 +41,4 @@ public class Friend {
         this.name = friendName;
     }
 
-    public String getFriendSpeak() {
-        return FriendSpeak;
-    }
-
-    public void setFriendSpeak(String friendSpeak) {
-        FriendSpeak = friendSpeak;
-    }
 }

@@ -10,20 +10,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dianmo.flash.Entity.Friend;
+import com.dianmo.flash.Entity.NewFriend;
 import com.dianmo.flash.Fragment.FragmentB;
 import com.dianmo.flash.R;
 
 import java.util.List;
 
 public class NewFriendAdapter extends BaseAdapter {
-    public NewFriendAdapter(Context context, List<Friend> newfDatas, FragmentB fragmentB) {
+    public NewFriendAdapter(Context context, List<NewFriend> newfDatas, FragmentB fragmentB) {
         this.new_fInflater = LayoutInflater.from(context);
         this.new_fDatas = newfDatas;
         fb=fragmentB;
     }
 
     private LayoutInflater new_fInflater;
-    private List<Friend> new_fDatas;
+    private List<NewFriend> new_fDatas;
     private FragmentB fb;
     @Override
     public int getCount() {
@@ -48,18 +49,16 @@ public class NewFriendAdapter extends BaseAdapter {
             holder=new NewFriendAdapter.ViewHolder();
             holder.image=(ImageView) view.findViewById(R.id.newfriendImg);
             holder.name=(TextView)view.findViewById(R.id.newfir_name);
-            holder.speak=(TextView)view.findViewById(R.id.newfir_speak);
             holder.ok=(Button)view.findViewById(R.id.button_ok);
             holder.refuse=(Button)view.findViewById(R.id.button_refuse);
             view.setTag(holder);
         } else {   //else里面说明，convertView已经被复用了，说明convertView中已经设置过tag了，即holder
             holder = (NewFriendAdapter.ViewHolder) view.getTag();
         }
-        Friend item = new_fDatas.get(i);
+        NewFriend item = new_fDatas.get(i);
 
-        holder.image.setImageResource(Integer.parseInt(item.getFriendImg()));
-        holder.name.setText(item.getFriendName());
-        holder.speak.setText((item.getFriendSpeak()));
+        holder.image.setImageResource(Integer.parseInt(item.getImg()));
+        holder.name.setText(item.getName());
 
         //添加ok和refuse响应函数
         final View view1=view;
@@ -89,7 +88,6 @@ public class NewFriendAdapter extends BaseAdapter {
     private class ViewHolder {
         ImageView image;
         TextView name;
-        TextView speak;
         Button ok;
         Button refuse;
     }

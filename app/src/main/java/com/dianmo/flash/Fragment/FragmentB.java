@@ -1,12 +1,17 @@
 package com.dianmo.flash.Fragment;
 
 
+import android.app.AlertDialog;;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,23 +23,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dianmo.flash.Adapter.ListAdapter;
 import com.dianmo.flash.Adapter.NewFriendAdapter;
 import com.dianmo.flash.EditActivity;
+import com.dianmo.flash.Entity.AddFriResult;
 import com.dianmo.flash.Entity.Friend;
 
+import com.dianmo.flash.Entity.user.FriendFromServ;
 import com.dianmo.flash.FriendMessage;
-<<<<<<< HEAD
 
-import com.dianmo.flash.Entity.user.UserInner;
-=======
 import com.dianmo.flash.Entity.user.UserInner;
 
 
 import com.dianmo.flash.Entity.FriendLists;
 
->>>>>>> f6c7950c0ba41f94a4e2a87ed6bd92888cd51ead
 import com.dianmo.flash.R;
 import com.dianmo.flash.uitl.INetCallback;
 import com.dianmo.flash.uitl.NetworkUtil;
@@ -44,6 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -55,7 +60,6 @@ public class FragmentB extends Fragment {
 
     private ListView list;
     private ListView newfirList;
-    private List<BigInteger> friIds;
 
     private ArrayList<Friend> findFri;
 
@@ -73,8 +77,7 @@ public class FragmentB extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        friIds = ((UserInner) getActivity().getIntent().getSerializableExtra("userInner")).getFriendIDList();
-        GetFriends(friIds);
+
         ImageView add=(ImageView)getActivity().findViewById(R.id.imageView);
         final EditText find=(EditText)getActivity().findViewById(R.id.friendFind);
         list = (ListView)getActivity().findViewById(R.id.list);
@@ -104,7 +107,29 @@ public class FragmentB extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("请输入对方萤火号");    //设置对话框标题
+                builder.setCancelable(true);
 
+                final EditText edit = new EditText(getContext());
+                builder.setView(edit);
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(edit.getText()!=null)
+                        {
+                            //发出添加请求
+                            AddFriend(edit.getText().toString());
+                        }
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
             }
         });
 
@@ -175,24 +200,31 @@ public class FragmentB extends Fragment {
         newfirList.setAdapter(new NewFriendAdapter(getContext(),FriendLists.getInstance().getNewFriends(),this));
     }
 
-    private void GetFriends(List<BigInteger> ui)
-    {
-        List<BigInteger> friendIDs=ui;//记录好友id
-        //查出对应id的好友的详细信息
-        for(final BigInteger id:friendIDs)
-        {
-            NetworkUtil.postMethod("",new HashMap<String, String>(){{
-                put("uid",id.toString());
-            }},Friend.class,new INetCallback<Friend>()
-            {
-                @Override
-                public void onSuccess(Friend msg) {
-                    if(msg!=null){
-                        FriendLists.getInstance().getFriends().add(msg);
-                    }
-                }
-            });
-        }
 
+
+    private void AddFriend(final String id)
+    {
+        final String u_id=((UserInner) getActivity().getIntent().getSerializableExtra("userInner")).getId().toString();
+        NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/req", new HashMap<String, String>() {{
+            put("uid", u_id);
+            put("fid", id);
+        }}, AddFriResult.class, new INetCallback<AddFriResult>() {
+            @Override
+            public void onSuccess(AddFriResult msg) {
+                Log.i("AddResult",String.valueOf(msg.isSuccess()));
+                if(msg.isSuccess())
+                {
+                    Looper.prepare();
+                    Toast.makeText(getContext(),"请求已发送",Toast.LENGTH_SHORT).show();
+
+                }
+                else
+                {
+                    Looper.prepare();
+                    Toast.makeText(getContext(),"请求失败",Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
     }
 }
