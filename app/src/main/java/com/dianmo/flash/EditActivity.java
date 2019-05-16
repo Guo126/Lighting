@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.dianmo.flash.Adapter.TextAdapter;
 import com.dianmo.flash.Entity.user.BasMsg;
+import com.dianmo.flash.Entity.user.MsgManager;
 import com.dianmo.flash.uitl.INetCallback;
 import com.dianmo.flash.uitl.NetworkUtil;
 import com.dianmo.flash.uitl.WsManager;
@@ -34,9 +35,10 @@ public class EditActivity extends AppCompatActivity {
     private boolean isUp = false;
     private int keyHeight = 0;
     private String  myMsg;
-    private List<String> datas;
+    private List<String> datas = new ArrayList<String>();
     private TextAdapter adapter;
     private SharedPreferences preferences;
+    private HashMap<String,List<String>> msgList ;
     private  String phone = null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         //初始化好友id
         friId = getIntent().getStringExtra("id");
+        msgList = MsgManager.getmInstance().getMsgList();
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         phone = preferences.getString("phoneNum",null);
         datas = new ArrayList<String>();
@@ -53,8 +56,12 @@ public class EditActivity extends AppCompatActivity {
         oprate = (ImageView)findViewById(R.id.oprate);
         send = (TextView)findViewById(R.id.send);
         mList = (ListView)findViewById(R.id.list);
+        if(msgList.containsKey(friId)){
+            datas.addAll(msgList.get(friId));
+        }
         adapter = new TextAdapter(this,datas);
         mList.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         editText = (EditText) findViewById(R.id.edit);
         oprate.setOnClickListener(new View.OnClickListener() {
             @Override

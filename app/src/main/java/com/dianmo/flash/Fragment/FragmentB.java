@@ -60,7 +60,12 @@ import com.google.gson.Gson;
 public class FragmentB extends Fragment {
     public static final int take =1;
 
+<<<<<<< HEAD
     private Handler handler=new Handler();
+=======
+
+    Handler handler=new Handler();
+>>>>>>> 11aa55750cbe3900542254ee70fec1977827e353
     private ListView list;
     private ListView newfirList;
 
@@ -134,6 +139,7 @@ public class FragmentB extends Fragment {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
+
                                     newfirList.setAdapter(new NewFriendAdapter(getContext(), FriendLists.getInstance().getNewFriends(), FragmentB.this));
                                 }
                             });
@@ -254,24 +260,44 @@ public class FragmentB extends Fragment {
             @Override
             public void onSuccess(AddFriResult msg) {
                 Log.i("AddResult",String.valueOf(msg.isSuccess()));
+
                 if(msg.isSuccess())
                 {
+<<<<<<< HEAD
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
                             Toast.makeText(getContext(),"请求已发送",Toast.LENGTH_SHORT).show();
                         }
                     });
+=======
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(), "请求已发送", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+>>>>>>> 11aa55750cbe3900542254ee70fec1977827e353
                 }
                 else
                 {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
+<<<<<<< HEAD
                             Toast.makeText(getContext(),"请求失败",Toast.LENGTH_SHORT).show();
                         }
                     });
+=======
+                            Toast.makeText(getContext(), "请求失败", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+>>>>>>> 11aa55750cbe3900542254ee70fec1977827e353
                 }
+                //Looper.loop();
             }
         });
     }

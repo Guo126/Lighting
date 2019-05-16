@@ -160,6 +160,13 @@ public class WsManager implements IWsManager {
         }
     };
 
+    @Override
+    protected void finalize() throws Throwable {
+
+
+        super.finalize();
+    }
+
     public WsManager(Builder builder) {
         mContext = builder.mContext;
         wsUrl = builder.wsUrl;
