@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.dianmo.flash.Entity.user.MsgManager;
 import com.dianmo.flash.Entity.user.UserInner;
 import com.dianmo.flash.Fragment.FragmentA;
 import com.dianmo.flash.Fragment.FragmentB;
@@ -51,7 +52,8 @@ public class MustActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 data = value.substring(11);
                 if (updateMsg != null)
-                    updateMsg.onUpdate(value.substring(0,10));
+                    MsgManager.getmInstance().addMsg(value.substring(0,11),value.substring(11));
+                    updateMsg.onUpdate(value.substring(0,11));
             }
         });
     }

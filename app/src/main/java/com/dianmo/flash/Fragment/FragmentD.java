@@ -122,6 +122,8 @@ public class FragmentD extends Fragment {
             case GETIMG:
                 //打开相册并选择照片，这个方式选择单张
 // 获取返回的数据，这里是android自定义的Uri地址
+                if(data==null)
+                    return;
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
 // 获取选择照片的数据视图
