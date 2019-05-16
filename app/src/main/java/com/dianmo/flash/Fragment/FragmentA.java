@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,11 +40,7 @@ public class FragmentA extends Fragment {
         // Required empty public constructor
         items = new ArrayList<FriItem>();
         items.add(new FriItem(R.drawable.man1,1,"小海","晚上一起去吃饭吧","10:45"));
-
-
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,13 +71,14 @@ public class FragmentA extends Fragment {
             @Override
             public void onUpdate(String id) {
                 String friName = FriendLists.getInstance().GetFriName(id);
-                if(friName==null)
-                    return;
+
                 for( FriItem item :items){
                     if(item.getFriName().equals(friName)){
                         item.setMesNum(1+ item.getMesNum());
                         item.setFriMes(((MustActivity)getActivity()).data);
-                        item.setTime(new SimpleDateFormat("hh:mm").format(new Date(System.currentTimeMillis())));
+                        Time time = new Time();
+                        time.setToNow();
+                        item.setTime(String.valueOf(time.hour)+":"+String.valueOf(time.minute));
                         adapter.notifyDataSetChanged();
                         return;
                     }

@@ -76,12 +76,7 @@ public class ChatActivity extends AppCompatActivity {
                 mData.add(recorder);
                 mAdapter.notifyDataSetChanged();
                 mList.setSelection(mData.size()-1);
-                NetworkUtil.transMsg("http://39.106.81.100:9999/firefly/chat/p2p",friId,filePath,ChatMsg.class,new INetCallback<ChatMsg>(){
-                    @Override
-                    public void onSuccess(ChatMsg msg) {
-                        chatMsg = msg;
-                    }
-                });
+
             }
         });
         mAdapter = new RecorderAdapter(this,mData);
