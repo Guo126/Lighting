@@ -60,7 +60,7 @@ import com.google.gson.Gson;
 public class FragmentB extends Fragment {
     public static final int take =1;
 
-
+    private Handler handler=new Handler();
     private ListView list;
     private ListView newfirList;
 
@@ -103,9 +103,11 @@ public class FragmentB extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Friend item =(Friend)parent.getAdapter().getItem(position);
-                Intent intent =new Intent(getActivity(), EditActivity.class);
+
+                Intent intent =new Intent(getContext(),FriendMessage.class);
                 intent.putExtra("name",item.getFriendName());
-                intent.putExtra("id",FriendLists.getInstance().GetFriId(item.getFriendName()));
+                intent.putExtra("id",item.getId());
+                intent.putExtra("img",item.getFriendImg());
                 startActivity(intent);
             }
         });
@@ -254,15 +256,21 @@ public class FragmentB extends Fragment {
                 Log.i("AddResult",String.valueOf(msg.isSuccess()));
                 if(msg.isSuccess())
                 {
-                    Looper.prepare();
-                    Toast.makeText(getContext(),"请求已发送",Toast.LENGTH_SHORT).show();
-
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),"请求已发送",Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
                 else
                 {
-                    Looper.prepare();
-                    Toast.makeText(getContext(),"请求失败",Toast.LENGTH_SHORT).show();
-
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),"请求失败",Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });

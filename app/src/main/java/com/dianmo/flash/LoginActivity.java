@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.dianmo.flash.Entity.Friend;
 import com.dianmo.flash.Entity.FriendLists;
 import com.dianmo.flash.Entity.user.UserInner;
 import com.dianmo.flash.Entity.user.UserMsg;
@@ -69,6 +70,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                     bar.setVisibility(View.VISIBLE);
                     login.setClickable(false);
+                    FriendLists.getInstance().getFriends().clear();
+                    FriendLists.getInstance().getNewFriends().clear();
                     NetworkUtil.postMethod("http://39.106.81.100:9999/firefly/user/login", new HashMap<String, String>() {{
                                 put("phone", phone.getText().toString());
                                 put("psw", password.getText().toString());
